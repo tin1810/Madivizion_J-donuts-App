@@ -102,6 +102,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otpLocked => 'Too many attempts. Resend the code to try again.';
 
   @override
+  String get otpResendPrompt => 'Didn\'t receive the code?';
+
+  @override
+  String get otpResendIn => 'resend in';
+
+  @override
+  String get otpResendMin => 'min';
+
+  @override
   String otpResendWaiting(String time) {
     return 'Didn\'t receive the code? resend in $time min';
   }

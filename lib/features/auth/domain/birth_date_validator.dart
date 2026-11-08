@@ -3,6 +3,13 @@ abstract final class AgeRules {
   static const int minimumAge = 13;
 }
 
+/// How many digits the day and year fields must contain.
+abstract final class BirthRules {
+  static const int dayDigits = 2;
+  static const int yearDigits = 4;
+  static const int earliestYear = 1900;
+}
+
 /// A date of birth that can be submitted.
 sealed class BirthDateCheck {
   const BirthDateCheck();
@@ -41,6 +48,30 @@ final class InvalidBirthDate extends BirthDateCheck {
   int get hashCode => reason.hashCode;
 }
 
+/// Reads a day only when it is exactly [BirthRules.dayDigits] long.
+int? parseBirthDay(String raw) => _parseDigits(raw, BirthRules.dayDigits);
+
+/// Reads a year only when it is exactly [BirthRules.yearDigits] long.
+int? parseBirthYear(String raw) => _parseDigits(raw, BirthRules.yearDigits);
+
+/// Years from [currentYear] back to [BirthRules.earliestYear], newest first.
+List<int> birthYears(int currentYear) {
+  if (currentYear < BirthRules.earliestYear) {
+    return const [];
+  }
+  return [
+    for (var year = currentYear; year >= BirthRules.earliestYear; year--) year,
+  ];
+}
+
+int? _parseDigits(String raw, int length) {
+  final text = raw.trim();
+  if (text.length != length) {
+    return null;
+  }
+  return int.tryParse(text);
+}
+
 /// Checks a real calendar date, then future dates, then [AgeRules.minimumAge].
 BirthDateCheck validateBirthDate({
   required int? month,
@@ -65,11 +96,7 @@ BirthDateCheck validateBirthDate({
   return ValidBirthDate(birth);
 }
 
-bool _isRealDate({
-  required int year,
-  required int month,
-  required int day,
-}) {
+bool _isRealDate({required int year, required int month, required int day}) {
   if (year < 1 || month < 1 || day < 1) {
     return false;
   }

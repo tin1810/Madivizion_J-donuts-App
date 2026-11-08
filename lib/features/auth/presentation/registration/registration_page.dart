@@ -83,10 +83,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        IconButton(
-          onPressed: () => _back(context),
-          icon: const Icon(Icons.arrow_back),
-        ),
+        _BackButton(onPressed: () => _back(context)),
         const Spacer(),
         ProgressRing(progress: state.ringProgress, checked: state.ringChecked),
       ],
@@ -99,6 +96,44 @@ class _Header extends StatelessWidget {
       return;
     }
     context.read<RegistrationBloc>().add(const RegistrationBackPressed());
+  }
+}
+
+class _BackButton extends StatelessWidget {
+  const _BackButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: AppColors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
+          child: const SizedBox.square(
+            dimension: 40,
+            child: Icon(
+              Icons.arrow_back,
+              color: AppColors.textPrimary,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

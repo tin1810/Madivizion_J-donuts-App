@@ -94,13 +94,52 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('birth-month-May')));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('birth-day')), '1');
-    await tester.enterText(find.byKey(const Key('birth-year')), '1980');
+    await tester.enterText(find.byKey(const Key('birth-day')), '123');
+    await tester.pump();
+    expect(_fieldText(tester, 'birth-day'), '12');
+    await tester.enterText(find.byKey(const Key('birth-day')), '01');
+    await tester.tap(find.byKey(const Key('birth-year')));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('birth-year-1980')),
+      400,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.tap(find.byKey(const Key('birth-year-1980')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('CONTINUE'));
     await tester.pumpAndSettle();
 
     expect(find.textContaining("world of J'donuts"), findsOneWidget);
+  });
+
+  testWidgets('a complete code shows loading before the next step', (
+    tester,
+  ) async {
+    await configureDependencies(
+      authRepository: MemoryAuthRepository(),
+      pacing: const AuthPacing(delay: Duration(seconds: 1)),
+      ticker: const _SilentTicker(),
+    );
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("LET'S GET STARTED"));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('phone-field')), '09254135592');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('CONTINUE'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('otp-field')), '123456');
+    await tester.pump();
+    expect(find.byKey(const Key('otp-loading')), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('otp-loading')), findsNothing);
+    expect(find.textContaining("What's your"), findsOneWidget);
   });
 
   testWidgets('an unknown number offers register', (tester) async {
@@ -110,6 +149,11 @@ void main() {
     expect(find.text('Register'), findsOneWidget);
     expect(find.textContaining('Verify your number'), findsNothing);
   });
+}
+
+String _fieldText(WidgetTester tester, String key) {
+  final field = tester.widget<TextField>(find.byKey(Key(key)));
+  return field.controller?.text ?? '';
 }
 
 bool _isShown(WidgetTester tester, Finder finder) {

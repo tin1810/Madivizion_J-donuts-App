@@ -128,6 +128,18 @@
   "@otpLocked": {
     "description": "Shown after three wrong OTP codes"
   },
+  "otpResendPrompt": "Didn't receive the code?",
+  "@otpResendPrompt": {
+    "description": "First line under the OTP boxes"
+  },
+  "otpResendIn": "resend in",
+  "@otpResendIn": {
+    "description": "Words before the resend countdown"
+  },
+  "otpResendMin": "min",
+  "@otpResendMin": {
+    "description": "Word after the resend countdown"
+  },
   "otpResendWaiting": "Didn't receive the code? resend in {time} min",
   "@otpResendWaiting": {
     "description": "Resend countdown while the action is still locked",

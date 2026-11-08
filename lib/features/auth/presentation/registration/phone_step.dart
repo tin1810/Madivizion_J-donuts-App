@@ -42,7 +42,7 @@ class _PhoneStepState extends State<PhoneStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.phoneHeadline, style: _title(context)),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.xl),
         AuthField(
           fieldKey: const Key('phone-field'),
           controller: _phone,

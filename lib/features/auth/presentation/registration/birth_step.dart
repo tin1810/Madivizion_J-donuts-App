@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
+import 'package:madivizion_jdonuts_app/features/auth/domain/birth_date_validator.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/auth_field.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/birth_month_sheet.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/birth_year_sheet.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_bloc.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_copy.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_event.dart';
@@ -49,17 +51,13 @@ class _BirthStepState extends State<BirthStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.birthHeadline, style: _title(context)),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.xl),
         AuthField(
           fieldKey: const Key('birth-month'),
           controller: _month,
           hint: l10n.birthMonthHint,
           enabled: enabled,
           readOnly: true,
-          suffixIcon: const Icon(
-            Icons.calendar_month_outlined,
-            color: AppColors.textSecondary,
-          ),
           onChanged: (_) {},
           onTap: enabled ? () => _pickMonth(bloc) : null,
         ),
@@ -70,7 +68,10 @@ class _BirthStepState extends State<BirthStep> {
           hint: l10n.birthDayHint,
           enabled: enabled,
           keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(BirthRules.dayDigits),
+          ],
           onChanged: (value) => bloc.add(BirthDayChanged(value)),
           onBlur: () => bloc.add(const BirthBlurred()),
         ),
@@ -80,11 +81,10 @@ class _BirthStepState extends State<BirthStep> {
           controller: _year,
           hint: l10n.birthYearHint,
           enabled: enabled,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          readOnly: true,
           error: birthMessage(l10n, widget.state),
-          onChanged: (value) => bloc.add(BirthYearChanged(value)),
-          onBlur: () => bloc.add(const BirthBlurred()),
+          onChanged: (_) {},
+          onTap: enabled ? () => _pickYear(bloc) : null,
         ),
       ],
     );
@@ -110,5 +110,26 @@ class _BirthStepState extends State<BirthStep> {
     }
     _month.text = picked;
     bloc.add(BirthMonthChanged(picked));
+  }
+
+  Future<void> _pickYear(RegistrationBloc bloc) async {
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      builder: (context) => BirthYearSheet(
+        selected: _year.text,
+        years: birthYears(DateTime.now().year),
+      ),
+    );
+    if (!mounted) {
+      return;
+    }
+    bloc.add(const BirthBlurred());
+    if (picked == null) {
+      return;
+    }
+    _year.text = picked;
+    bloc.add(BirthYearChanged(picked));
   }
 }

@@ -26,7 +26,7 @@ class OtpStep extends StatelessWidget {
           l10n.otpSent(state.displayPhone),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.xl),
         OtpBoxes(
           code: state.otp,
           shake: state.shake,
@@ -35,6 +35,10 @@ class OtpStep extends StatelessWidget {
             context.read<RegistrationBloc>().add(OtpChanged(value));
           },
         ),
+        if (state.submitting) ...[
+          const SizedBox(height: AppSpacing.lg),
+          const _OtpLoading(),
+        ],
         if (message != null) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(message, style: _error(context)),
@@ -66,22 +70,39 @@ class _ResendLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final style = Theme.of(context).textTheme.bodyMedium;
+    final prompt = Text(l10n.otpResendPrompt, style: style);
     if (state.resendRemaining == Duration.zero) {
-      return Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.otpResendReady, style: style),
+          prompt,
           GestureDetector(
-            onTap: () =>
-                context.read<RegistrationBloc>().add(const ResendPressed()),
+            onTap: state.submitting
+                ? null
+                : () => context.read<RegistrationBloc>().add(
+                    const ResendPressed(),
+                  ),
             child: Text(l10n.otpResendAction, style: _link(style)),
           ),
         ],
       );
     }
-    return Text(
-      l10n.otpResendWaiting(formatResend(state.resendRemaining)),
-      style: style,
+    final time = formatResend(state.resendRemaining);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        prompt,
+        Text.rich(
+          TextSpan(
+            style: style,
+            children: [
+              TextSpan(text: '${l10n.otpResendIn} '),
+              TextSpan(text: time, style: _link(style)),
+              TextSpan(text: ' ${l10n.otpResendMin}'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -89,6 +110,24 @@ class _ResendLine extends StatelessWidget {
     return style?.copyWith(
       color: AppColors.accent,
       fontWeight: FontWeight.w700,
+    );
+  }
+}
+
+class _OtpLoading extends StatelessWidget {
+  const _OtpLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: SizedBox.square(
+        key: Key('otp-loading'),
+        dimension: AppSpacing.lg,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.5,
+          color: AppColors.primary,
+        ),
+      ),
     );
   }
 }

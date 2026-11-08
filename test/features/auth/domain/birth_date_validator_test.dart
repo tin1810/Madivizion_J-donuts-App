@@ -5,12 +5,7 @@ void main() {
   final today = DateTime(2026, 11, 8);
 
   BirthDateCheck check({int? month, int? day, int? year}) {
-    return validateBirthDate(
-      month: month,
-      day: day,
-      year: year,
-      today: today,
-    );
+    return validateBirthDate(month: month, day: day, year: year, today: today);
   }
 
   test('1 May 1980 is a valid birth date', () {
@@ -74,6 +69,27 @@ void main() {
       check(month: 11, day: 8, year: 2026),
       const InvalidBirthDate(BirthDateRejection.tooYoung),
     );
+  });
+
+  test('a day needs exactly two digits', () {
+    expect(parseBirthDay('1'), isNull);
+    expect(parseBirthDay('01'), 1);
+    expect(parseBirthDay('15'), 15);
+    expect(parseBirthDay('123'), isNull);
+  });
+
+  test('calendar years run from this year back to 1900', () {
+    final years = birthYears(2026);
+    expect(years.first, 2026);
+    expect(years.last, BirthRules.earliestYear);
+    expect(years, isNot(contains(2027)));
+    expect(birthYears(1899), isEmpty);
+  });
+
+  test('a year needs exactly four digits', () {
+    expect(parseBirthYear('980'), isNull);
+    expect(parseBirthYear('1980'), 1980);
+    expect(parseBirthYear('19801'), isNull);
   });
 
   test('a missing day is incomplete', () {

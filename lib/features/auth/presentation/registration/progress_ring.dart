@@ -21,7 +21,7 @@ class ProgressRing extends StatefulWidget {
 
 class _ProgressRingState extends State<ProgressRing>
     with SingleTickerProviderStateMixin {
-  static const double _size = 32;
+  static const double _size = 36;
 
   late final AnimationController _motion;
   late Animation<double> _value;
@@ -95,7 +95,9 @@ class _Check extends StatelessWidget {
           color: AppColors.accent,
           shape: BoxShape.circle,
         ),
-        child: Icon(Icons.check, color: AppColors.onPrimary, size: 18),
+        child: Center(
+          child: Icon(Icons.check, color: AppColors.onPrimary, size: 18),
+        ),
       ),
     );
   }
@@ -108,25 +110,32 @@ class _RingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final stroke = size.shortestSide * 0.30;
     final center = size.center(Offset.zero);
-    final radius = size.shortestSide / 2 - 2;
-    final track = Paint()
-      ..color = AppColors.border
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3;
-    final arc = Paint()
+    final radius = (size.shortestSide - stroke) / 2;
+    final cyan = Paint()
       ..color = AppColors.primary
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round;
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.butt;
+    final pink = Paint()
+      ..color = AppColors.accent
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.butt;
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    // Pink starts at 12 o'clock and grows clockwise. Phone is a short arc.
+    final amount = progress.clamp(0.0, 1.0).toDouble();
+    final pinkDegrees = (72 + (amount - 0.25) * 396).clamp(36.0, 360.0);
+    final pinkSweep = _rad(pinkDegrees.toDouble());
     canvas
-      ..drawCircle(center, radius, track)
+      ..drawArc(rect, _rad(270), pinkSweep, false, pink)
       ..drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2,
-        math.pi * 2 * progress.clamp(0, 1),
+        rect,
+        _rad(270) + pinkSweep,
+        math.pi * 2 - pinkSweep,
         false,
-        arc,
+        cyan,
       );
   }
 
@@ -135,3 +144,5 @@ class _RingPainter extends CustomPainter {
     return oldDelegate.progress != progress;
   }
 }
+
+double _rad(double degrees) => degrees * math.pi / 180;

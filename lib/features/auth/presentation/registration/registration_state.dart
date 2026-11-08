@@ -102,8 +102,8 @@ class RegistrationState {
   BirthDateCheck birthCheck(DateTime today) {
     return validateBirthDate(
       month: _number(month, parseMonth),
-      day: _number(day, int.tryParse),
-      year: _number(year, int.tryParse),
+      day: parseBirthDay(day),
+      year: parseBirthYear(year),
       today: today,
     );
   }

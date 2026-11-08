@@ -268,6 +268,24 @@ abstract class AppLocalizations {
   /// **'Too many attempts. Resend the code to try again.'**
   String get otpLocked;
 
+  /// First line under the OTP boxes
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code?'**
+  String get otpResendPrompt;
+
+  /// Words before the resend countdown
+  ///
+  /// In en, this message translates to:
+  /// **'resend in'**
+  String get otpResendIn;
+
+  /// Word after the resend countdown
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get otpResendMin;
+
   /// Resend countdown while the action is still locked
   ///
   /// In en, this message translates to:

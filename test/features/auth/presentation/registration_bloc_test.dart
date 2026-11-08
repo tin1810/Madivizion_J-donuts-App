@@ -206,7 +206,7 @@ Future<void> _readyToRegister(RegistrationBloc bloc) async {
   bloc.add(const NameSubmitted());
   await bloc.stream.firstWhere((state) => state.step == RegistrationStep.birth);
   bloc.add(const BirthMonthChanged('May'));
-  bloc.add(const BirthDayChanged('1'));
+  bloc.add(const BirthDayChanged('01'));
   bloc.add(const BirthYearChanged('1980'));
 }
 

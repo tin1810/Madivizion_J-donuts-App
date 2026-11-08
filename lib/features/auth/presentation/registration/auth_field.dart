@@ -65,7 +65,7 @@ class _AuthFieldState extends State<AuthField> {
     }
     return Padding(
       padding: const EdgeInsets.only(left: AppSpacing.md),
-      child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
+      child: Text(text, style: _prefixStyle(context)),
     );
   }
 
@@ -97,11 +97,20 @@ class _AuthFieldState extends State<AuthField> {
           style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: widget.hint,
+            hintStyle: Theme.of(context).textTheme.bodyMedium,
+            filled: true,
+            fillColor: AppColors.surface,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
             prefixIcon: _prefix(context),
             prefixIconConstraints: widget.prefix == null
                 ? null
                 : const BoxConstraints(minWidth: 0, minHeight: 0),
-            contentPadding: widget.prefix == null ? null : _prefixPadding,
+            contentPadding: widget.prefix == null
+                ? _fieldPadding
+                : _prefixPadding,
             errorText: null,
             suffixIcon: widget.suffixIcon,
           ),
@@ -111,6 +120,17 @@ class _AuthFieldState extends State<AuthField> {
     );
   }
 }
+
+TextStyle? _prefixStyle(BuildContext context) {
+  return Theme.of(
+    context,
+  ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary);
+}
+
+const EdgeInsets _fieldPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.md,
+  vertical: AppSpacing.md,
+);
 
 const EdgeInsets _prefixPadding = EdgeInsets.fromLTRB(
   0,

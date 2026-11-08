@@ -61,13 +61,16 @@ class _OtpBoxesState extends State<OtpBoxes> {
         alignment: Alignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for (var index = 0; index < OtpRules.length; index++)
-                _Cell(
-                  digit: _digit(index),
-                  focused: widget.enabled && index == widget.code.length,
+              for (var index = 0; index < OtpRules.length; index++) ...[
+                if (index > 0) const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: _Cell(
+                    digit: _digit(index),
+                    focused: widget.enabled && index == widget.code.length,
+                  ),
                 ),
+              ],
             ],
           ),
           TextField(
@@ -126,15 +129,13 @@ class _Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: AppMotion.resolve(context, AppMotion.fast),
-      width: 48,
       height: AppSize.inputHeight,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
         border: Border.all(
-          color: focused ? AppColors.primary : AppColors.border,
-          width: focused ? AppSize.focusedBorderWidth : AppSize.borderWidth,
+          color: focused ? AppColors.primary : AppColors.surface,
         ),
       ),
       child: Text(digit, style: Theme.of(context).textTheme.titleLarge),
