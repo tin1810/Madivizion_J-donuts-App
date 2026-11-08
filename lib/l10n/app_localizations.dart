@@ -99,6 +99,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'J\'Donuts'**
   String get appTitle;
+
+  /// Placeholder title for the onboarding route
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding'**
+  String get onboardingTitle;
+
+  /// Placeholder title for the home route
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeTitle;
+
+  /// Placeholder title for the settings route
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// Placeholder title for a product route
+  ///
+  /// In en, this message translates to:
+  /// **'Product {id}'**
+  String productTitle(String id);
 }
 
 class _AppLocalizationsDelegate

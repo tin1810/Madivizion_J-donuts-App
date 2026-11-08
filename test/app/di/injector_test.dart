@@ -4,6 +4,10 @@ import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
 import 'package:madivizion_jdonuts_app/app/di/injector.dart';
 
 void main() {
+  setUp(() async {
+    await injector.reset();
+  });
+
   tearDown(() async {
     await injector.reset();
   });

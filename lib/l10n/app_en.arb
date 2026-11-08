@@ -3,5 +3,27 @@
   "appTitle": "J'Donuts",
   "@appTitle": {
     "description": "Name of the application"
+  },
+  "onboardingTitle": "Onboarding",
+  "@onboardingTitle": {
+    "description": "Placeholder title for the onboarding route"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Placeholder title for the home route"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Placeholder title for the settings route"
+  },
+  "productTitle": "Product {id}",
+  "@productTitle": {
+    "description": "Placeholder title for a product route",
+    "placeholders": {
+      "id": {
+        "type": "String",
+        "example": "p_coconut"
+      }
+    }
   }
 }

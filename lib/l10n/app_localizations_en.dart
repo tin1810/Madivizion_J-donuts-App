@@ -10,4 +10,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appTitle => 'J\'Donuts';
+
+  @override
+  String get onboardingTitle => 'Onboarding';
+
+  @override
+  String get homeTitle => 'Home';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String productTitle(String id) {
+    return 'Product $id';
+  }
 }
