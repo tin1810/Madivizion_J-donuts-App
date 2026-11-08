@@ -3,7 +3,10 @@ abstract final class PhoneRules {
   static const String countryCode = '+95';
   static const String leadingZero = '0';
   static const int minSubscriberDigits = 7;
-  static const int maxSubscriberDigits = 9;
+  static const int maxSubscriberDigits = 10;
+
+  /// Digits the person can type, not counting +95. Fewer still match.
+  static const int maxDigits = 11;
 }
 
 /// A phone field that can be submitted.
@@ -42,6 +45,9 @@ PhoneCheck validatePhone(String raw) {
     national = national.substring(PhoneRules.countryCode.length);
   }
   national = national.replaceAll(RegExp(r'[\s-]'), '');
+  if (national.length > PhoneRules.maxDigits) {
+    return const InvalidPhone();
+  }
   if (national.startsWith(PhoneRules.leadingZero)) {
     national = national.substring(PhoneRules.leadingZero.length);
   }
@@ -49,4 +55,27 @@ PhoneCheck validatePhone(String raw) {
     return const InvalidPhone();
   }
   return ValidPhone('${PhoneRules.countryCode}$national');
+}
+
+/// Drops digits past [PhoneRules.maxDigits]. Spaces and dashes stay.
+String limitPhoneDigits(String raw) {
+  final hasCountry = raw.startsWith(PhoneRules.countryCode);
+  final body = hasCountry ? raw.substring(PhoneRules.countryCode.length) : raw;
+  return '${hasCountry ? PhoneRules.countryCode : ''}${_keepDigits(body)}';
+}
+
+String _keepDigits(String body) {
+  final kept = StringBuffer();
+  var digits = 0;
+  for (final rune in body.runes) {
+    final isDigit = rune >= 0x30 && rune <= 0x39;
+    if (isDigit && digits == PhoneRules.maxDigits) {
+      continue;
+    }
+    if (isDigit) {
+      digits++;
+    }
+    kept.writeCharCode(rune);
+  }
+  return kept.toString();
 }

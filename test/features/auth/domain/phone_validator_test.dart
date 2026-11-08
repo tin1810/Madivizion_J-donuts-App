@@ -32,8 +32,17 @@ void main() {
     expect(validatePhone('9254135'), const InvalidPhone());
   });
 
-  test('more than nine digits after 9 is rejected', () {
-    expect(validatePhone('92541355921'), const InvalidPhone());
+  test('eleven digits is accepted', () {
+    expect(validatePhone('92541355921'), const ValidPhone('+9592541355921'));
+  });
+
+  test('more than eleven digits is rejected', () {
+    expect(validatePhone('925413559210'), const InvalidPhone());
+    expect(validatePhone('092541355921'), const InvalidPhone());
+  });
+
+  test('spaces do not let a number grow past eleven digits', () {
+    expect(limitPhoneDigits('09 254-135-5921'), '09 254-135-592');
   });
 
   test('a number that does not start with 9 is rejected', () {
@@ -41,7 +50,7 @@ void main() {
   });
 
   test('only one leading zero is removed', () {
-    expect(validatePhone('009254135592'), const InvalidPhone());
+    expect(validatePhone('00925413559'), const InvalidPhone());
   });
 
   test('letters are rejected', () {

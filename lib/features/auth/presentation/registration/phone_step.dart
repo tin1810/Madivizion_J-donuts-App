@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/phone_validator.dart';
@@ -47,6 +48,7 @@ class _PhoneStepState extends State<PhoneStep> {
           controller: _phone,
           prefix: '${PhoneRules.countryCode}  ',
           keyboardType: TextInputType.phone,
+          inputFormatters: const [PhoneDigitFormatter()],
           enabled: !widget.state.submitting,
           error: phoneMessage(l10n, widget.state),
           onChanged: (value) => bloc.add(PhoneChanged(value)),
@@ -59,6 +61,26 @@ class _PhoneStepState extends State<PhoneStep> {
 
   TextStyle? _title(BuildContext context) {
     return Theme.of(context).textTheme.headlineMedium;
+  }
+}
+
+/// Stops the field at [PhoneRules.maxDigits] digits. Shorter input stays.
+class PhoneDigitFormatter extends TextInputFormatter {
+  const PhoneDigitFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final limited = limitPhoneDigits(newValue.text);
+    if (limited == newValue.text) {
+      return newValue;
+    }
+    return TextEditingValue(
+      text: limited,
+      selection: TextSelection.collapsed(offset: limited.length),
+    );
   }
 }
 

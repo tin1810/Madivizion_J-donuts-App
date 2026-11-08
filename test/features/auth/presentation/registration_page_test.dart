@@ -12,6 +12,31 @@ void main() {
     await injector.reset();
   });
 
+  testWidgets('the phone page shows +95 before typing', (tester) async {
+    await _pump(tester);
+
+    final prefix = find.textContaining('+95');
+    expect(prefix, findsOneWidget);
+    expect(_isShown(tester, prefix), isTrue);
+  });
+
+  testWidgets('the phone field keeps eleven digits and drops the rest', (
+    tester,
+  ) async {
+    await _pump(tester);
+
+    await tester.enterText(
+      find.byKey(const Key('phone-field')),
+      '092541355921',
+    );
+    await tester.pump();
+
+    final field = tester.widget<TextField>(
+      find.byKey(const Key('phone-field')),
+    );
+    expect(field.controller?.text, '09254135592');
+  });
+
   testWidgets('an invalid phone shows an error after blur', (tester) async {
     await _pump(tester);
 
@@ -82,6 +107,23 @@ void main() {
     expect(find.text('Register'), findsOneWidget);
     expect(find.textContaining('Verify your number'), findsNothing);
   });
+}
+
+bool _isShown(WidgetTester tester, Finder finder) {
+  var shown = true;
+  tester.element(finder).visitAncestorElements((ancestor) {
+    final widget = ancestor.widget;
+    shown =
+        shown &&
+        switch (widget) {
+          AnimatedOpacity(:final opacity) => opacity > 0,
+          Opacity(:final opacity) => opacity > 0,
+          FadeTransition(:final opacity) => opacity.value > 0,
+          _ => true,
+        };
+    return shown;
+  });
+  return shown;
 }
 
 Future<void> _pump(WidgetTester tester, {bool fromLogIn = false}) async {

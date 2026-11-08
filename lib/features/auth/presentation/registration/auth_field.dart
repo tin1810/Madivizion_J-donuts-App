@@ -52,6 +52,17 @@ class _AuthFieldState extends State<AuthField> {
     super.dispose();
   }
 
+  Widget? _prefix(BuildContext context) {
+    final text = widget.prefix;
+    if (text == null) {
+      return null;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(left: AppSpacing.md),
+      child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
+    );
+  }
+
   void _handleFocus() {
     if (_focus.hasFocus) {
       _sawFocus = true;
@@ -78,8 +89,11 @@ class _AuthFieldState extends State<AuthField> {
           style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: widget.hint,
-            prefixText: widget.prefix,
-            prefixStyle: Theme.of(context).textTheme.bodyLarge,
+            prefixIcon: _prefix(context),
+            prefixIconConstraints: widget.prefix == null
+                ? null
+                : const BoxConstraints(minWidth: 0, minHeight: 0),
+            contentPadding: widget.prefix == null ? null : _prefixPadding,
             errorText: null,
           ),
         ),
@@ -88,6 +102,13 @@ class _AuthFieldState extends State<AuthField> {
     );
   }
 }
+
+const EdgeInsets _prefixPadding = EdgeInsets.fromLTRB(
+  0,
+  AppSpacing.md,
+  AppSpacing.md,
+  AppSpacing.md,
+);
 
 class _ErrorLine extends StatelessWidget {
   const _ErrorLine({required this.message});
