@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
 import 'package:madivizion_jdonuts_app/app/di/injector.dart';
 
+import '../../features/auth/memory_auth_repository.dart';
+
 void main() {
   setUp(() async {
     await injector.reset();
@@ -13,7 +15,7 @@ void main() {
   });
 
   test('configureDependencies registers one shared bloc observer', () async {
-    await configureDependencies();
+    await configureDependencies(authRepository: MemoryAuthRepository());
 
     final first = injector<BlocObserver>();
     final second = injector<BlocObserver>();

@@ -1,35 +1,48 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_routes.dart';
 import 'package:madivizion_jdonuts_app/app/router/route_placeholder.dart';
+import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 /// Sends signed-out users to onboarding and signed-in users away from it.
+///
+/// [isSignedIn] is null while the saved session is still being read.
 String? authRedirect({
-  required bool isSignedIn,
+  required bool? isSignedIn,
   required String location,
 }) {
+  if (isSignedIn == null) {
+    return location == AppRoutes.startup ? null : AppRoutes.startup;
+  }
   final atOnboarding = location == AppRoutes.onboarding;
   if (!isSignedIn) {
     return atOnboarding ? null : AppRoutes.onboarding;
   }
-  if (atOnboarding) {
+  final leavingGate = atOnboarding || location == AppRoutes.startup;
+  if (leavingGate) {
     return AppRoutes.home;
   }
   return null;
 }
 
-/// App routes. [isSignedIn] is the session stub until secure storage exists.
-GoRouter createRouter({required bool isSignedIn}) {
+/// App routes. [session] refreshes redirects after login and log out.
+GoRouter createRouter({required SessionListenable session}) {
   return GoRouter(
-    initialLocation: isSignedIn ? AppRoutes.home : AppRoutes.onboarding,
+    initialLocation: AppRoutes.startup,
+    refreshListenable: session,
     redirect: (context, state) {
       return authRedirect(
-        isSignedIn: isSignedIn,
+        isSignedIn: session.isSignedIn,
         location: state.matchedLocation,
       );
     },
     routes: [
+      GoRoute(
+        path: AppRoutes.startup,
+        builder: (context, state) => const Scaffold(),
+      ),
       _titledRoute(
         path: AppRoutes.onboarding,
         title: (context) => AppLocalizations.of(context).onboardingTitle,
@@ -38,9 +51,9 @@ GoRouter createRouter({required bool isSignedIn}) {
         path: AppRoutes.home,
         title: (context) => AppLocalizations.of(context).homeTitle,
       ),
-      _titledRoute(
+      GoRoute(
         path: AppRoutes.settings,
-        title: (context) => AppLocalizations.of(context).settingsTitle,
+        builder: (context, state) => const SettingsPage(),
       ),
       _productRoute(),
     ],

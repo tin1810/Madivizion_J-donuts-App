@@ -1,7 +1,8 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/di/injector.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/session_bloc.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -16,12 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: AppTheme.light(),
+    return BlocProvider<SessionBloc>.value(
+      value: injector<SessionBloc>(),
+      child: MaterialApp.router(
+        routerConfig: appRouter,
+        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: AppTheme.light(),
+      ),
     );
   }
 }

@@ -16,6 +16,10 @@
   "@settingsTitle": {
     "description": "Placeholder title for the settings route"
   },
+  "logOut": "Log out",
+  "@logOut": {
+    "description": "Action that clears the saved session"
+  },
   "productTitle": "Product {id}",
   "@productTitle": {
     "description": "Placeholder title for a product route",

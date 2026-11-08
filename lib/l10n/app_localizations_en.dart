@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get logOut => 'Log out';
+
+  @override
   String productTitle(String id) {
     return 'Product $id';
   }

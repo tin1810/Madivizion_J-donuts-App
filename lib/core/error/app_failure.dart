@@ -1,8 +1,8 @@
 /// A typed failure returned through [Result].
 ///
-/// Domain code throws one of these, or [Result.capture] records an unexpected
+/// Feature failures extend this class. [Result.capture] records an unexpected
 /// error without dropping its cause.
-sealed class AppFailure {
+abstract class AppFailure {
   const AppFailure();
 }
 

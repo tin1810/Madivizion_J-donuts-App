@@ -1,5 +1,6 @@
-/// Paths for the app shell. Session storage replaces [signedInStub].
+/// Paths for the app shell.
 abstract final class AppRoutes {
+  static const String startup = '/';
   static const String onboarding = '/onboarding';
   static const String home = '/home';
   static const String settings = '/settings';
@@ -8,6 +9,3 @@ abstract final class AppRoutes {
 
   static String productLocation(String id) => '/product/$id';
 }
-
-/// Logged-out until the session is read from secure storage.
-const bool signedInStub = false;

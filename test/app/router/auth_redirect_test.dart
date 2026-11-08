@@ -47,4 +47,31 @@ void main() {
 
     expect(location, isNull);
   });
+
+  test('an unknown session stays on the startup route', () {
+    final location = authRedirect(
+      isSignedIn: null,
+      location: AppRoutes.startup,
+    );
+
+    expect(location, isNull);
+  });
+
+  test('an unknown session opening home waits on startup', () {
+    final location = authRedirect(
+      isSignedIn: null,
+      location: AppRoutes.home,
+    );
+
+    expect(location, AppRoutes.startup);
+  });
+
+  test('a signed in user leaving startup is sent home', () {
+    final location = authRedirect(
+      isSignedIn: true,
+      location: AppRoutes.startup,
+    );
+
+    expect(location, AppRoutes.home);
+  });
 }

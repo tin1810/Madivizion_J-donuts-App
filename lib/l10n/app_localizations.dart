@@ -118,6 +118,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// Action that clears the saved session
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOut;
+
   /// Placeholder title for a product route
   ///
   /// In en, this message translates to:
