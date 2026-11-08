@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
+import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/database_opener.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/drift_auth_repository.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/secure_session_store.dart';
@@ -16,6 +18,7 @@ import 'package:madivizion_jdonuts_app/features/auth/domain/register_account.dar
 import 'package:madivizion_jdonuts_app/features/auth/domain/sign_in.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/second_ticker.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/session_bloc.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seeder.dart';
 
 /// Composition root. Widgets resolve dependencies from here.
 final GetIt injector = GetIt.instance;
@@ -37,6 +40,12 @@ Future<void> configureDependencies({
 
 Future<AuthRepository> _openAuthRepository() async {
   final database = await openAppDatabase();
+  injector.registerSingleton<AppDatabase>(
+    database,
+    dispose: (value) => value.close(),
+  );
+  final raw = await rootBundle.loadString('assets/seed/catalog.json');
+  await seedCatalog(database, raw);
   return DriftAuthRepository(
     database: database,
     sessionStore: const SecureSessionStore(FlutterSecureStorage()),
