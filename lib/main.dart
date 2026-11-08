@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
+import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: AppTheme.title,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme.light(),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );

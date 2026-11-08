@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Colours, type, and spacing taken from the J'Donuts screen designs.
 abstract final class AppTheme {
-  static const String title = 'J\'Donuts';
-
   static ThemeData light() {
     final scheme = _colorScheme();
     return ThemeData(
