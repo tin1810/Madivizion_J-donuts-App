@@ -158,6 +158,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeTitle => 'Welcome';
 
   @override
+  String get welcomeHeadline => 'Welcome to the\nworld of J\'donuts';
+
+  @override
+  String get welcomeExplore => 'LET\'S EXPLORE';
+
+  @override
+  String get offlineBanner => 'You\'re offline';
+
+  @override
+  String get imageUnavailable => 'Image unavailable';
+
+  @override
   String get homeTitle => 'Home';
 
   @override

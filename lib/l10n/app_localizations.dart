@@ -370,11 +370,35 @@ abstract class AppLocalizations {
   /// **'You must be at least 13.'**
   String get birthTooYoung;
 
-  /// Placeholder title after registration, until the welcome screen is built
+  /// Short name of the welcome screen
   ///
   /// In en, this message translates to:
   /// **'Welcome'**
   String get welcomeTitle;
+
+  /// Headline under the welcome donut tiles
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to the\nworld of J\'donuts'**
+  String get welcomeHeadline;
+
+  /// Opens Home from the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'LET\'S EXPLORE'**
+  String get welcomeExplore;
+
+  /// Small banner shown while the network cannot be reached
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline'**
+  String get offlineBanner;
+
+  /// Spoken label when a catalog image cannot be shown
+  ///
+  /// In en, this message translates to:
+  /// **'Image unavailable'**
+  String get imageUnavailable;
 
   /// Placeholder title for the home route
   ///

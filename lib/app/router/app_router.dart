@@ -7,6 +7,7 @@ import 'package:madivizion_jdonuts_app/features/auth/presentation/onboarding/onb
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_flow.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_state.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
+import 'package:madivizion_jdonuts_app/features/welcome/presentation/welcome_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 /// Sends signed-out users to onboarding and signed-in users away from it.
@@ -64,9 +65,9 @@ GoRouter createRouter({required SessionListenable session}) {
           return const RegistrationFlow(purpose: RegistrationPurpose.signIn);
         },
       ),
-      _titledRoute(
+      GoRoute(
         path: AppRoutes.welcome,
-        title: (context) => AppLocalizations.of(context).welcomeTitle,
+        builder: (context, state) => const WelcomePage(),
       ),
       _titledRoute(
         path: AppRoutes.home,

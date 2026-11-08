@@ -97,7 +97,7 @@ void main() {
     await tester.tap(find.text('CONTINUE'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Welcome'), findsWidgets);
+    expect(find.textContaining("world of J'donuts"), findsOneWidget);
   });
 
   testWidgets('an unknown number offers register', (tester) async {

@@ -204,7 +204,23 @@
   },
   "welcomeTitle": "Welcome",
   "@welcomeTitle": {
-    "description": "Placeholder title after registration, until the welcome screen is built"
+    "description": "Short name of the welcome screen"
+  },
+  "welcomeHeadline": "Welcome to the\nworld of J'donuts",
+  "@welcomeHeadline": {
+    "description": "Headline under the welcome donut tiles"
+  },
+  "welcomeExplore": "LET'S EXPLORE",
+  "@welcomeExplore": {
+    "description": "Opens Home from the welcome screen"
+  },
+  "offlineBanner": "You're offline",
+  "@offlineBanner": {
+    "description": "Small banner shown while the network cannot be reached"
+  },
+  "imageUnavailable": "Image unavailable",
+  "@imageUnavailable": {
+    "description": "Spoken label when a catalog image cannot be shown"
   },
   "homeTitle": "Home",
   "@homeTitle": {

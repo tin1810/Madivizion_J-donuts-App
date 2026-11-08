@@ -3,9 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madivizion_jdonuts_app/app/connectivity/link_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
+import 'package:madivizion_jdonuts_app/core/network/link_phase.dart';
+import 'package:madivizion_jdonuts_app/core/network/link_watch.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/database_opener.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/drift_auth_repository.dart';
@@ -19,6 +22,10 @@ import 'package:madivizion_jdonuts_app/features/auth/domain/sign_in.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/second_ticker.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/session_bloc.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seeder.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/data/disk_image_cache.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/data/http_image_fetcher.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/data/memory_image_cache.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/domain/image_cache.dart';
 
 /// Composition root. Widgets resolve dependencies from here.
 final GetIt injector = GetIt.instance;
@@ -31,11 +38,42 @@ Future<void> configureDependencies({
   AuthRepository? authRepository,
   AuthPacing? pacing,
   SecondTicker? ticker,
+  LinkWatch? linkWatch,
 }) async {
   injector.registerLazySingleton<BlocObserver>(AppBlocObserver.new);
   final repository = authRepository ?? await _openAuthRepository();
   _registerAuth(repository, pacing: pacing, ticker: ticker);
   _registerSession();
+  _registerLink(linkWatch ?? const FixedLinkWatch(LinkPhase.online));
+  if (authRepository == null) {
+    await _registerProductionImages();
+    return;
+  }
+  _registerImages(
+    LoadRemoteImage(
+      cache: MemoryImageCache(),
+      fetcher: const UnavailableImageFetcher(),
+    ),
+  );
+}
+
+void _registerLink(LinkWatch watch) {
+  final bloc = LinkBloc(watch);
+  injector.registerSingleton<LinkBloc>(bloc, dispose: (value) => value.close());
+  bloc.add(const LinkStarted());
+}
+
+void _registerImages(LoadRemoteImage loader) {
+  injector.registerSingleton<LoadRemoteImage>(loader);
+}
+
+Future<void> _registerProductionImages() async {
+  _registerImages(
+    LoadRemoteImage(
+      cache: await openDiskImageCache(),
+      fetcher: const HttpImageFetcher(),
+    ),
+  );
 }
 
 Future<AuthRepository> _openAuthRepository() async {
