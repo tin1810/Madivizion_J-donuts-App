@@ -8,6 +8,72 @@
   "@onboardingTitle": {
     "description": "Placeholder title for the onboarding route"
   },
+  "onboardingHeadline": "Round food for\nevery mood",
+  "@onboardingHeadline": {
+    "description": "Onboarding headline under the donut circles"
+  },
+  "onboardingGetStarted": "LET'S GET STARTED",
+  "@onboardingGetStarted": {
+    "description": "Primary action that starts registration"
+  },
+  "onboardingAccountPrompt": "Already have an account? ",
+  "@onboardingAccountPrompt": {
+    "description": "Text before the log in action"
+  },
+  "onboardingLogIn": "Log in",
+  "@onboardingLogIn": {
+    "description": "Action that starts sign in for an existing account"
+  },
+  "onboardingLegalLead": "By continuing, you acknowledge that you have read and agree to our ",
+  "@onboardingLegalLead": {
+    "description": "Legal sentence before the terms link"
+  },
+  "onboardingTerms": "Terms of Use",
+  "@onboardingTerms": {
+    "description": "Link that opens the terms placeholder"
+  },
+  "onboardingLegalJoin": " and ",
+  "@onboardingLegalJoin": {
+    "description": "Word between the terms and privacy links"
+  },
+  "onboardingPrivacy": "Privacy Policy",
+  "@onboardingPrivacy": {
+    "description": "Link that opens the privacy placeholder"
+  },
+  "onboardingLegalEnd": ".",
+  "@onboardingLegalEnd": {
+    "description": "Closing punctuation of the legal sentence"
+  },
+  "onboardingGoogle": "Google",
+  "@onboardingGoogle": {
+    "description": "Google sign-in action"
+  },
+  "onboardingApple": "Apple",
+  "@onboardingApple": {
+    "description": "Apple sign-in action"
+  },
+  "onboardingFacebook": "Facebook",
+  "@onboardingFacebook": {
+    "description": "Facebook sign-in action"
+  },
+  "onboardingSocialUnavailable": "{provider} sign-in is not connected in this test.",
+  "@onboardingSocialUnavailable": {
+    "description": "Sheet shown when a social sign-in is tapped",
+    "placeholders": {
+      "provider": {
+        "type": "String",
+        "example": "Google"
+      }
+    }
+  },
+  "onboardingDocumentUnavailable": "This document is not included in the test build.",
+  "@onboardingDocumentUnavailable": {
+    "description": "Sheet shown for Terms of Use and Privacy Policy"
+  },
+  "phoneTitle": "Phone number",
+  "@phoneTitle": {
+    "description": "Title of the phone step until that screen is built"
+  },
   "homeTitle": "Home",
   "@homeTitle": {
     "description": "Placeholder title for the home route"

@@ -4,12 +4,32 @@ import 'package:madivizion_jdonuts_app/app/router/app_routes.dart';
 
 void main() {
   test('signed out user opening home is sent to onboarding', () {
-    final location = authRedirect(
-      isSignedIn: false,
-      location: AppRoutes.home,
-    );
+    final location = authRedirect(isSignedIn: false, location: AppRoutes.home);
 
     expect(location, AppRoutes.onboarding);
+  });
+
+  test('signed out user stays on the phone step', () {
+    final register = authRedirect(
+      isSignedIn: false,
+      location: AppRoutes.registerPhone,
+    );
+    final signIn = authRedirect(
+      isSignedIn: false,
+      location: AppRoutes.signInPhone,
+    );
+
+    expect(register, isNull);
+    expect(signIn, isNull);
+  });
+
+  test('signed in user leaving the phone step is sent home', () {
+    final location = authRedirect(
+      isSignedIn: true,
+      location: AppRoutes.registerPhone,
+    );
+
+    expect(location, AppRoutes.home);
   });
 
   test('signed out user stays on onboarding', () {
@@ -58,10 +78,7 @@ void main() {
   });
 
   test('an unknown session opening home waits on startup', () {
-    final location = authRedirect(
-      isSignedIn: null,
-      location: AppRoutes.home,
-    );
+    final location = authRedirect(isSignedIn: null, location: AppRoutes.home);
 
     expect(location, AppRoutes.startup);
   });

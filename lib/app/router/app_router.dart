@@ -3,28 +3,31 @@ import 'package:go_router/go_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_routes.dart';
 import 'package:madivizion_jdonuts_app/app/router/route_placeholder.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/onboarding/onboarding_page.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 /// Sends signed-out users to onboarding and signed-in users away from it.
 ///
 /// [isSignedIn] is null while the saved session is still being read.
-String? authRedirect({
-  required bool? isSignedIn,
-  required String location,
-}) {
+String? authRedirect({required bool? isSignedIn, required String location}) {
   if (isSignedIn == null) {
     return location == AppRoutes.startup ? null : AppRoutes.startup;
   }
-  final atOnboarding = location == AppRoutes.onboarding;
   if (!isSignedIn) {
-    return atOnboarding ? null : AppRoutes.onboarding;
+    return _isAuthStart(location) ? null : AppRoutes.onboarding;
   }
-  final leavingGate = atOnboarding || location == AppRoutes.startup;
-  if (leavingGate) {
+  final leavingAuth = _isAuthStart(location) || location == AppRoutes.startup;
+  if (leavingAuth) {
     return AppRoutes.home;
   }
   return null;
+}
+
+bool _isAuthStart(String location) {
+  return location == AppRoutes.onboarding ||
+      location == AppRoutes.registerPhone ||
+      location == AppRoutes.signInPhone;
 }
 
 /// App routes. [session] refreshes redirects after login and log out.
@@ -43,9 +46,17 @@ GoRouter createRouter({required SessionListenable session}) {
         path: AppRoutes.startup,
         builder: (context, state) => const Scaffold(),
       ),
-      _titledRoute(
+      GoRoute(
         path: AppRoutes.onboarding,
-        title: (context) => AppLocalizations.of(context).onboardingTitle,
+        builder: (context, state) => const OnboardingPage(),
+      ),
+      _titledRoute(
+        path: AppRoutes.registerPhone,
+        title: (context) => AppLocalizations.of(context).phoneTitle,
+      ),
+      _titledRoute(
+        path: AppRoutes.signInPhone,
+        title: (context) => AppLocalizations.of(context).phoneTitle,
       ),
       _titledRoute(
         path: AppRoutes.home,

@@ -16,7 +16,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('Onboarding'), findsWidgets);
+    expect(find.textContaining('Round food for'), findsOneWidget);
   });
 
   testWidgets('a saved session opens home and log out returns to onboarding', (
@@ -35,6 +35,6 @@ void main() {
     await tester.tap(find.text('Log out'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Onboarding'), findsWidgets);
+    expect(find.textContaining('Round food for'), findsOneWidget);
   });
 }

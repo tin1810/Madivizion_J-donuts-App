@@ -106,6 +106,96 @@ abstract class AppLocalizations {
   /// **'Onboarding'**
   String get onboardingTitle;
 
+  /// Onboarding headline under the donut circles
+  ///
+  /// In en, this message translates to:
+  /// **'Round food for\nevery mood'**
+  String get onboardingHeadline;
+
+  /// Primary action that starts registration
+  ///
+  /// In en, this message translates to:
+  /// **'LET\'S GET STARTED'**
+  String get onboardingGetStarted;
+
+  /// Text before the log in action
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get onboardingAccountPrompt;
+
+  /// Action that starts sign in for an existing account
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get onboardingLogIn;
+
+  /// Legal sentence before the terms link
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you acknowledge that you have read and agree to our '**
+  String get onboardingLegalLead;
+
+  /// Link that opens the terms placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get onboardingTerms;
+
+  /// Word between the terms and privacy links
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get onboardingLegalJoin;
+
+  /// Link that opens the privacy placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get onboardingPrivacy;
+
+  /// Closing punctuation of the legal sentence
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get onboardingLegalEnd;
+
+  /// Google sign-in action
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get onboardingGoogle;
+
+  /// Apple sign-in action
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get onboardingApple;
+
+  /// Facebook sign-in action
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get onboardingFacebook;
+
+  /// Sheet shown when a social sign-in is tapped
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} sign-in is not connected in this test.'**
+  String onboardingSocialUnavailable(String provider);
+
+  /// Sheet shown for Terms of Use and Privacy Policy
+  ///
+  /// In en, this message translates to:
+  /// **'This document is not included in the test build.'**
+  String get onboardingDocumentUnavailable;
+
+  /// Title of the phone step until that screen is built
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get phoneTitle;
+
   /// Placeholder title for the home route
   ///
   /// In en, this message translates to:

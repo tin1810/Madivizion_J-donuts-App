@@ -62,6 +62,7 @@ abstract final class AppTextSize {
   static const double body = 16;
   static const double label = 14;
   static const double button = 15;
+  static const double caption = 12;
 }
 
 abstract final class AppTextHeight {
