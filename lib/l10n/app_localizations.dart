@@ -499,7 +499,7 @@ abstract class AppLocalizations {
   /// Home row of seasonal products
   ///
   /// In en, this message translates to:
-  /// **'Seasonal specials'**
+  /// **'Seasonal specials💕'**
   String get homeSeasonal;
 
   /// Home row of popular products
@@ -514,6 +514,12 @@ abstract class AppLocalizations {
   /// **'Order again'**
   String get homeOrderAgain;
 
+  /// Tier chip beside the member name on Home
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} member'**
+  String homeTierMember(String tier);
+
   /// Points remaining before the next tier
   ///
   /// In en, this message translates to:
@@ -523,19 +529,31 @@ abstract class AppLocalizations {
   /// Shop strip heading, using the number of shops in the database
   ///
   /// In en, this message translates to:
-  /// **'There are {count} J\'Donut shops near you'**
+  /// **'There are {count} J\'Donut shops'**
   String homeShops(int count);
+
+  /// Heading above the nearby shop cards
+  ///
+  /// In en, this message translates to:
+  /// **'near you. 🤤'**
+  String get homeNearYou;
+
+  /// Small pill on the lead Home banner
+  ///
+  /// In en, this message translates to:
+  /// **'Now Open'**
+  String get homeNowOpen;
 
   /// Display-only shop action
   ///
   /// In en, this message translates to:
-  /// **'Explore now'**
+  /// **'EXPLORE NOW'**
   String get homeExploreNow;
 
   /// Display-only shop action
   ///
   /// In en, this message translates to:
-  /// **'Order online'**
+  /// **'Order Online'**
   String get homeOrderOnline;
 
   /// Shown when a Home section has no rows
@@ -609,6 +627,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log out'**
   String get logOut;
+
+  /// Badge on a product marked new
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get productNew;
+
+  /// Label beside the product description
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s this?'**
+  String get productWhatsThis;
+
+  /// Button that confirms the chosen quantity
+  ///
+  /// In en, this message translates to:
+  /// **'ADD TO CART'**
+  String get productAdd;
+
+  /// Confirmation after Add to cart. Nothing is stored.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to cart'**
+  String get productAdded;
+
+  /// Shown when /product/:id is not in Drift
+  ///
+  /// In en, this message translates to:
+  /// **'This product is not available.'**
+  String get productMissing;
+
+  /// A price in Myanmar kyat, already grouped
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} MMK'**
+  String productPrice(String amount);
 
   /// Placeholder title for a product route
   ///

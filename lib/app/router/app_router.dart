@@ -9,6 +9,7 @@ import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/r
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_state.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/home_page.dart';
+import 'package:madivizion_jdonuts_app/features/product/presentation/product_detail_page.dart';
 import 'package:madivizion_jdonuts_app/features/rewards/presentation/rewards_page.dart';
 import 'package:madivizion_jdonuts_app/features/welcome/presentation/welcome_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
@@ -135,9 +136,7 @@ GoRoute _productRoute() {
     path: AppRoutes.product,
     builder: (context, state) {
       final id = state.pathParameters[AppRoutes.productId] ?? '';
-      return RoutePlaceholder(
-        title: AppLocalizations.of(context).productTitle(id),
-      );
+      return ProductDetailPage(id: id);
     },
   );
 }

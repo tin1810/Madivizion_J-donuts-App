@@ -250,7 +250,7 @@
   "@homeTitle": {
     "description": "Short name of the home screen"
   },
-  "homeSeasonal": "Seasonal specials",
+  "homeSeasonal": "Seasonal specials💕",
   "@homeSeasonal": {
     "description": "Home row of seasonal products"
   },
@@ -262,6 +262,13 @@
   "@homeOrderAgain": {
     "description": "Home row of products the member can order again"
   },
+  "homeTierMember": "{tier} member",
+  "@homeTierMember": {
+    "description": "Tier chip beside the member name on Home",
+    "placeholders": {
+      "tier": {"type": "String", "example": "Silver"}
+    }
+  },
   "homePointsLeft": "{points} points left to become {tier}",
   "@homePointsLeft": {
     "description": "Points remaining before the next tier",
@@ -270,18 +277,26 @@
       "tier": {"type": "String", "example": "Gold"}
     }
   },
-  "homeShops": "There are {count} J'Donut shops near you",
+  "homeShops": "There are {count} J'Donut shops",
   "@homeShops": {
     "description": "Shop strip heading, using the number of shops in the database",
     "placeholders": {
       "count": {"type": "int", "example": "4"}
     }
   },
-  "homeExploreNow": "Explore now",
+  "homeNearYou": "near you. 🤤",
+  "@homeNearYou": {
+    "description": "Heading above the nearby shop cards"
+  },
+  "homeNowOpen": "Now Open",
+  "@homeNowOpen": {
+    "description": "Small pill on the lead Home banner"
+  },
+  "homeExploreNow": "EXPLORE NOW",
   "@homeExploreNow": {
     "description": "Display-only shop action"
   },
-  "homeOrderOnline": "Order online",
+  "homeOrderOnline": "Order Online",
   "@homeOrderOnline": {
     "description": "Display-only shop action"
   },
@@ -335,6 +350,36 @@
   "logOut": "Log out",
   "@logOut": {
     "description": "Action that clears the saved session"
+  },
+  "productNew": "New",
+  "@productNew": {
+    "description": "Badge on a product marked new"
+  },
+  "productWhatsThis": "What's this?",
+  "@productWhatsThis": {
+    "description": "Label beside the product description"
+  },
+  "productAdd": "ADD TO CART",
+  "@productAdd": {
+    "description": "Button that confirms the chosen quantity"
+  },
+  "productAdded": "Added to cart",
+  "@productAdded": {
+    "description": "Confirmation after Add to cart. Nothing is stored."
+  },
+  "productMissing": "This product is not available.",
+  "@productMissing": {
+    "description": "Shown when /product/:id is not in Drift"
+  },
+  "productPrice": "{amount} MMK",
+  "@productPrice": {
+    "description": "A price in Myanmar kyat, already grouped",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "3,200"
+      }
+    }
   },
   "productTitle": "Product {id}",
   "@productTitle": {

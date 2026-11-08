@@ -17,21 +17,20 @@ class HomeHeader extends StatelessWidget {
       Success<MemberProfile>(:final value) => value,
       Failure<MemberProfile>() => null,
     };
-    if (profile == null) {
-      return Text(l10n.homeMemberError, style: _error(context));
-    }
-    return Row(
-      children: [
-        ClipOval(
-          child: SizedBox.square(
-            dimension: 52,
-            child: CatalogImage(url: profile.photoUrl),
-          ),
+    final top = MediaQuery.paddingOf(context).top;
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: AppColors.headerWash),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          top + AppSpacing.sm,
+          AppSpacing.md,
+          AppSpacing.sm,
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(child: _Identity(profile: profile)),
-        _Bell(count: profile.notificationCount),
-      ],
+        child: profile == null
+            ? Text(l10n.homeMemberError, style: _error(context))
+            : _Loaded(profile: profile),
+      ),
     );
   }
 
@@ -39,6 +38,40 @@ class HomeHeader extends StatelessWidget {
     return Theme.of(
       context,
     ).textTheme.bodyMedium?.copyWith(color: AppColors.error);
+  }
+}
+
+class _Loaded extends StatelessWidget {
+  const _Loaded({required this.profile});
+
+  final MemberProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final next = displayTier(profile.nextTier);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipOval(
+              child: SizedBox.square(
+                dimension: 56,
+                child: CatalogImage(url: profile.photoUrl),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(child: _Identity(profile: profile)),
+            const SizedBox(width: AppSpacing.sm),
+            _Bell(count: profile.notificationCount),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        _Points(label: l10n.homePointsLeft(profile.pointsToNextTier, next)),
+      ],
+    );
   }
 }
 
@@ -50,49 +83,59 @@ class _Identity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final next = displayTier(profile.nextTier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(profile.name, style: _name(context)),
-        const SizedBox(height: AppSpacing.xxs),
-        _TierChip(label: displayTier(profile.tier)),
-        const SizedBox(height: AppSpacing.xxs),
         Text(
-          l10n.homePointsLeft(profile.pointsToNextTier, next),
-          style: Theme.of(context).textTheme.bodyMedium,
+          l10n.homeTierMember(displayTier(profile.tier)),
+          style: _role(context),
         ),
       ],
     );
   }
 
+  TextStyle? _role(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.textPrimary,
+      fontWeight: FontWeight.w500,
+    );
+  }
+
   TextStyle? _name(BuildContext context) {
-    return Theme.of(
-      context,
-    ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700);
+    return Theme.of(context).textTheme.titleLarge?.copyWith(
+      fontSize: AppTextSize.subtitle,
+      fontWeight: FontWeight.w700,
+    );
   }
 }
 
-class _TierChip extends StatelessWidget {
-  const _TierChip({required this.label});
+class _Points extends StatelessWidget {
+  const _Points({required this.label});
 
   final String label;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surface,
-        borderRadius: const BorderRadius.all(Radius.circular(AppRadius.pill)),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xxs,
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
         ),
-        child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        child: Text(label, style: _style(context)),
       ),
+    );
+  }
+
+  TextStyle? _style(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.textPrimary,
+      fontWeight: FontWeight.w600,
     );
   }
 }
@@ -104,14 +147,36 @@ class _Bell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Badge(
-      isLabelVisible: count > 0,
-      label: Text('$count'),
-      backgroundColor: AppColors.badge,
-      child: const Icon(
-        Icons.notifications_outlined,
-        color: AppColors.textPrimary,
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.badge,
+        borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
       ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.notifications_none,
+              color: AppColors.onPrimary,
+              size: 20,
+            ),
+            const SizedBox(width: AppSpacing.xxs),
+            Text('$count', style: _count(context)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextStyle? _count(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.onPrimary,
+      fontWeight: FontWeight.w700,
     );
   }
 }

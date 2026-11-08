@@ -3,6 +3,7 @@ import 'package:madivizion_jdonuts_app/core/result/result.dart';
 import 'package:madivizion_jdonuts_app/core/result/unit.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seeder.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/domain/catalog_product.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
 
@@ -30,6 +31,27 @@ class DriftCatalogRepository implements CatalogRepository {
     return Result.capture(() async {
       await replaceCatalog(database, await source.load());
       return Unit.instance;
+    });
+  }
+
+  @override
+  Future<Result<CatalogProduct>> findProduct(String id) {
+    return _guard(() async {
+      final query = database.select(database.storedProducts)
+        ..where((row) => row.id.equals(id));
+      final row = await query.getSingleOrNull();
+      if (row == null) {
+        throw const CacheFailure();
+      }
+      return CatalogProduct(
+        id: row.id,
+        code: row.code,
+        name: row.name,
+        priceMmk: row.priceMmk,
+        isNew: row.isNew,
+        imageUrl: row.imageUrl,
+        description: row.description,
+      );
     });
   }
 

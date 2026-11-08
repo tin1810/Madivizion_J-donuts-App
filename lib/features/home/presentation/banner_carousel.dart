@@ -18,7 +18,9 @@ class BannerCarousel extends StatefulWidget {
 }
 
 class _BannerCarouselState extends State<BannerCarousel> {
-  final PageController _pages = PageController();
+  static const double _fraction = 0.86;
+
+  final ScrollController _scroll = ScrollController();
   Timer? _timer;
   var _index = 0;
 
@@ -40,7 +42,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
   @override
   void dispose() {
     _timer?.cancel();
-    _pages.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -54,12 +56,14 @@ class _BannerCarouselState extends State<BannerCarousel> {
   }
 
   void _advance() {
-    if (!mounted || !_pages.hasClients) {
+    if (!mounted || !_scroll.hasClients) {
       return;
     }
     final next = (_index + 1) % widget.banners.length;
-    _pages.animateToPage(
-      next,
+    _index = next;
+    final width = _scroll.position.viewportDimension * _fraction;
+    _scroll.animateTo(
+      next * width,
       duration: AppMotion.page,
       curve: AppMotion.sharedAxisCurve,
     );
@@ -67,21 +71,30 @@ class _BannerCarouselState extends State<BannerCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 168,
-          child: PageView.builder(
-            controller: _pages,
+    return SizedBox(
+      height: 188,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth * _fraction;
+          final tail = constraints.maxWidth - width - AppSpacing.md;
+          return ListView.builder(
+            controller: _scroll,
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.only(
+              left: AppSpacing.md,
+              right: tail < 0 ? 0 : tail,
+            ),
             itemCount: widget.banners.length,
-            onPageChanged: (index) => setState(() => _index = index),
-            itemBuilder: (context, index) =>
-                _Slide(banner: widget.banners[index]),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        _Dots(count: widget.banners.length, index: _index),
-      ],
+            itemBuilder: (context, index) {
+              return SizedBox(
+                key: ValueKey(widget.banners[index].id),
+                width: width,
+                child: _Slide(banner: widget.banners[index]),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -93,57 +106,15 @@ class _Slide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            CatalogImage(url: banner.imageUrl),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Text(banner.title, style: _title(context)),
-              ),
-            ),
-          ],
+    return Semantics(
+      label: banner.title,
+      child: Padding(
+        padding: const EdgeInsets.only(right: AppSpacing.sm),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(AppRadius.lg)),
+          child: CatalogImage(url: banner.imageUrl),
         ),
       ),
-    );
-  }
-
-  TextStyle? _title(BuildContext context) {
-    return Theme.of(context).textTheme.titleMedium?.copyWith(
-      color: AppColors.onPrimary,
-      fontWeight: FontWeight.w700,
-    );
-  }
-}
-
-class _Dots extends StatelessWidget {
-  const _Dots({required this.count, required this.index});
-
-  final int count;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (var i = 0; i < count; i++)
-          Container(
-            width: 6,
-            height: 6,
-            margin: const EdgeInsets.symmetric(horizontal: 3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: i == index ? AppColors.primary : AppColors.border,
-            ),
-          ),
-      ],
     );
   }
 }

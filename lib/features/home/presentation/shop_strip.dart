@@ -36,9 +36,11 @@ class _Loaded extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Banner(text: l10n.homeShops(shops.length)),
+        const SizedBox(height: AppSpacing.md),
+        const _NearYou(),
         const SizedBox(height: AppSpacing.sm),
         SizedBox(
-          height: 268,
+          height: 220,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -66,14 +68,49 @@ class _Banner extends StatelessWidget {
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: AppColors.onPrimary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        child: Text(text, style: _style(context)),
       ),
+    );
+  }
+
+  TextStyle? _style(BuildContext context) {
+    return Theme.of(context).textTheme.bodyLarge?.copyWith(
+      color: AppColors.onPrimary,
+      fontWeight: FontWeight.w700,
+    );
+  }
+}
+
+class _NearYou extends StatelessWidget {
+  const _NearYou();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.homeNearYou, style: _title(context)),
+          const SizedBox(height: AppSpacing.xxs),
+          Text(l10n.homeExploreNow, style: _action(context)),
+        ],
+      ),
+    );
+  }
+
+  TextStyle? _title(BuildContext context) {
+    return Theme.of(
+      context,
+    ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700);
+  }
+
+  TextStyle? _action(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.primary,
+      fontWeight: FontWeight.w700,
+      letterSpacing: AppTextTracking.button,
     );
   }
 }
@@ -87,12 +124,11 @@ class _ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return SizedBox(
-      width: 180,
+      width: 220,
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surface,
-          borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
-          border: Border.all(color: AppColors.border),
+          borderRadius: BorderRadius.all(Radius.circular(AppRadius.md)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +138,7 @@ class _ShopCard extends StatelessWidget {
                 top: Radius.circular(AppRadius.md),
               ),
               child: SizedBox(
-                height: 96,
+                height: 112,
                 width: double.infinity,
                 child: CatalogImage(url: shop.imageUrl),
               ),
@@ -112,12 +148,8 @@ class _ShopCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    shop.name,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  Text(shop.name, style: _name(context)),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(l10n.homeExploreNow, style: _action(context)),
                   Text(l10n.homeOrderOnline, style: _action(context)),
                 ],
               ),
@@ -128,9 +160,16 @@ class _ShopCard extends StatelessWidget {
     );
   }
 
+  TextStyle? _name(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.textPrimary,
+      fontWeight: FontWeight.w700,
+    );
+  }
+
   TextStyle? _action(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: AppColors.primary,
+      color: AppColors.accent,
       fontWeight: FontWeight.w700,
     );
   }

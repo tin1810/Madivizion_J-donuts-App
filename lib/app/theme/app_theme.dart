@@ -20,8 +20,12 @@ abstract final class AppTheme {
 
 abstract final class AppColors {
   static const Color background = Color(0xFFFFF0F4);
+  static const Color canvas = Color(0xFFECEEF0);
+  static const Color headerWash = Color(0xFFB8E3F1);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color primary = Color(0xFF20D0E8);
+  static const Color nav = Color(0xFF33C4E9);
+  static const Color navPink = Color(0xFFF159A3);
   static const Color primaryDisabled = Color(0xFFB6EEF6);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color accent = Color(0xFFF868A0);
@@ -30,6 +34,7 @@ abstract final class AppColors {
   static const Color textSecondary = Color(0xFF7A7378);
   static const Color border = Color(0xFFF0DDE4);
   static const Color error = Color(0xFFE5484D);
+  static const Color info = Color(0xFF66AE39);
   static const Color transparent = Color(0x00000000);
 }
 
@@ -45,6 +50,7 @@ abstract final class AppSpacing {
 
 abstract final class AppRadius {
   static const double md = 16;
+  static const double lg = 24;
   static const double pill = 28;
 }
 
@@ -59,6 +65,7 @@ abstract final class AppSize {
 abstract final class AppTextSize {
   static const double headline = 32;
   static const double title = 28;
+  static const double subtitle = 22;
   static const double body = 16;
   static const double label = 14;
   static const double button = 15;

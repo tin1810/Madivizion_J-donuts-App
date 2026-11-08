@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:madivizion_jdonuts_app/core/result/result.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seeder.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/domain/catalog_product.dart';
 import 'package:madivizion_jdonuts_app/features/home/data/drift_catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
@@ -37,6 +38,15 @@ void main() {
     expect(
       (feed.banners as Success<List<HomeBanner>>).value.first.title,
       'We are now at Central Boulevard',
+    );
+    final coconut = await repository.findProduct('p_coconut');
+    final product = (coconut as Success<CatalogProduct>).value;
+    expect(product.code, 'JD022123');
+    expect(product.priceMmk, 3200);
+    expect(product.isNew, isTrue);
+    expect(
+      await repository.findProduct('missing'),
+      isA<Failure<CatalogProduct>>(),
     );
   });
 

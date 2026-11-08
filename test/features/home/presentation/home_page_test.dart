@@ -9,6 +9,7 @@ import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/core/network/link_phase.dart';
 import 'package:madivizion_jdonuts_app/core/result/result.dart';
 import 'package:madivizion_jdonuts_app/core/result/unit.dart';
+import 'package:madivizion_jdonuts_app/features/catalog/domain/catalog_product.dart';
 import 'package:madivizion_jdonuts_app/features/home/data/memory_catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
@@ -34,16 +35,16 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('Hania'), findsOneWidget);
-    expect(find.text('Silver'), findsOneWidget);
+    expect(find.text('Silver member'), findsOneWidget);
     expect(find.text('500 points left to become Gold'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
     expect(find.text('Mistletoe Romance box'), findsOneWidget);
     expect(find.text('59% off'), findsOneWidget);
     expect(find.text('Nothing here yet'), findsOneWidget);
     expect(find.text("Couldn't load this section"), findsOneWidget);
-    expect(find.text('There are 4 J\'Donut shops near you'), findsOneWidget);
-    expect(find.text('Explore now'), findsWidgets);
-    expect(find.text('Order online'), findsWidgets);
+    expect(find.text('There are 4 J\'Donut shops'), findsOneWidget);
+    expect(find.text('EXPLORE NOW'), findsOneWidget);
+    expect(find.text('Order Online'), findsWidgets);
 
     await tester.tap(find.text('Mistletoe Romance box'));
     await tester.pump();
@@ -79,10 +80,12 @@ void main() {
 
   testWidgets('the banner carousel advances on its own', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(
           body: BannerCarousel(
-            interval: Duration(milliseconds: 500),
+            interval: Duration(seconds: 2),
             banners: [
               HomeBanner(
                 id: 'a',
@@ -100,12 +103,15 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('First banner'), findsOneWidget);
+    final first = tester.getTopLeft(find.byKey(const ValueKey('a'))).dx;
 
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pump(const Duration(milliseconds: 400));
 
-    expect(tester.getTopLeft(find.text('Second banner')).dx, lessThan(80));
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('b'))).dx,
+      closeTo(first, 1),
+    );
   });
 }
 
@@ -202,6 +208,11 @@ class _FixedCatalog implements CatalogRepository {
 
   @override
   Future<Result<Unit>> refresh() async => const Success(Unit.instance);
+
+  @override
+  Future<Result<CatalogProduct>> findProduct(String id) async {
+    return const Failure(CacheFailure());
+  }
 }
 
 class _GatedCatalog implements CatalogRepository {
@@ -217,4 +228,9 @@ class _GatedCatalog implements CatalogRepository {
 
   @override
   Future<Result<Unit>> refresh() async => const Success(Unit.instance);
+
+  @override
+  Future<Result<CatalogProduct>> findProduct(String id) async {
+    return const Failure(CacheFailure());
+  }
 }

@@ -218,7 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTitle => 'Home';
 
   @override
-  String get homeSeasonal => 'Seasonal specials';
+  String get homeSeasonal => 'Seasonal specials💕';
 
   @override
   String get homePopular => 'Popular 🔥';
@@ -227,20 +227,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeOrderAgain => 'Order again';
 
   @override
+  String homeTierMember(String tier) {
+    return '$tier member';
+  }
+
+  @override
   String homePointsLeft(int points, String tier) {
     return '$points points left to become $tier';
   }
 
   @override
   String homeShops(int count) {
-    return 'There are $count J\'Donut shops near you';
+    return 'There are $count J\'Donut shops';
   }
 
   @override
-  String get homeExploreNow => 'Explore now';
+  String get homeNearYou => 'near you. 🤤';
 
   @override
-  String get homeOrderOnline => 'Order online';
+  String get homeNowOpen => 'Now Open';
+
+  @override
+  String get homeExploreNow => 'EXPLORE NOW';
+
+  @override
+  String get homeOrderOnline => 'Order Online';
 
   @override
   String get homeSectionEmpty => 'Nothing here yet';
@@ -279,6 +290,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log out';
+
+  @override
+  String get productNew => 'New';
+
+  @override
+  String get productWhatsThis => 'What\'s this?';
+
+  @override
+  String get productAdd => 'ADD TO CART';
+
+  @override
+  String get productAdded => 'Added to cart';
+
+  @override
+  String get productMissing => 'This product is not available.';
+
+  @override
+  String productPrice(String amount) {
+    return '$amount MMK';
+  }
 
   @override
   String productTitle(String id) {

@@ -3,7 +3,9 @@ import 'package:madivizion_jdonuts_app/app/motion/app_motion.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
-/// Five destinations. The pink pill slides to the selected one.
+part 'nav_pill.dart';
+
+/// Five destinations. The icons stay in one row while the pink pill moves.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.selected,
@@ -18,150 +20,131 @@ class AppNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final items = _items(l10n);
-    return ColoredBox(
-      color: AppColors.accent,
-      child: SafeArea(
-        top: false,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.xs,
-            vertical: AppSpacing.xs,
-          ),
-          decoration: const BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(AppRadius.pill),
+    final pink = MediaQuery.paddingOf(context).bottom + AppSpacing.xl;
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: pink,
+          child: const ColoredBox(color: AppColors.navPink),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.nav,
+              border: const Border(
+                top: BorderSide(color: AppColors.border, width: 1),
+                right: BorderSide(color: AppColors.border, width: 1),
+                left: BorderSide(color: AppColors.border, width: 1),
+              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-          ),
-          child: SizedBox(
-            height: 56,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  children: [
-                    for (final item in items)
-                      Expanded(
-                        child: Icon(
-                          item.icon,
-                          color: AppColors.onPrimary,
-                          size: 22,
-                        ),
-                      ),
-                  ],
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                height: _barHeight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
+                  child: _NavStack(
+                    items: items,
+                    selected: selected,
+                    onSelected: onSelected,
+                  ),
                 ),
-                AnimatedAlign(
-                  duration: AppMotion.resolve(context, AppMotion.page),
-                  curve: AppMotion.sharedAxisCurve,
-                  alignment: Alignment(_align(selected), 0),
-                  child: _Pill(item: items[selected]),
-                ),
-                Row(
-                  children: [
-                    for (var index = 0; index < items.length; index++)
-                      Expanded(
-                        child: _Hit(
-                          index: index,
-                          item: items[index],
-                          onSelected: onSelected,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
   List<_NavItem> _items(AppLocalizations l10n) {
     return [
-      _NavItem(Icons.home_rounded, l10n.navHome, 'nav-home'),
-      _NavItem(Icons.workspace_premium_rounded, l10n.navReward, 'nav-reward'),
-      _NavItem(Icons.adjust, null, 'nav-nearby'),
-      _NavItem(Icons.account_balance_wallet_outlined, null, 'nav-wallet'),
-      _NavItem(Icons.settings_outlined, null, 'nav-settings'),
+      _NavItem(Icons.home_outlined, l10n.navHome, 'nav-home'),
+      _NavItem(Icons.workspace_premium_outlined, l10n.navReward, 'nav-reward'),
+      _NavItem(Icons.adjust, l10n.navNearby, 'nav-nearby'),
+      _NavItem(Icons.wallet_outlined, l10n.navWallet, 'nav-wallet'),
+      _NavItem(Icons.settings_outlined, l10n.settingsTitle, 'nav-settings'),
     ];
   }
-
-  double _align(int index) {
-    return (index / 4) * 2 - 1;
-  }
 }
+
+const _barHeight = 64.0;
+const _iconSize = 22.0;
+const _pillHeight = 44.0;
 
 class _NavItem {
   const _NavItem(this.icon, this.label, this.keyName);
 
   final IconData icon;
-  final String? label;
+  final String label;
   final String keyName;
 }
 
-class _Hit extends StatelessWidget {
-  const _Hit({
-    required this.index,
-    required this.item,
+class _NavStack extends StatelessWidget {
+  const _NavStack({
+    required this.items,
+    required this.selected,
     required this.onSelected,
   });
 
-  final int index;
-  final _NavItem item;
+  final List<_NavItem> items;
+  final int selected;
   final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: item.label,
-      child: GestureDetector(
-        key: Key(item.keyName),
-        behavior: HitTestBehavior.opaque,
-        onTap: () => onSelected(index),
-        child: const SizedBox.expand(),
-      ),
+    final style = _labelStyle(context);
+    final scaler = MediaQuery.textScalerOf(context);
+    final widths = [
+      for (final item in items) _pillWidth(item.label, style, scaler),
+    ];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return _NavMotion(
+          items: items,
+          selected: selected,
+          onSelected: onSelected,
+          widths: widths,
+          barWidth: constraints.maxWidth,
+          style: style,
+        );
+      },
     );
   }
 }
 
-class _Pill extends StatelessWidget {
-  const _Pill({required this.item});
+TextStyle _labelStyle(BuildContext context) {
+  final theme = Theme.of(context).textTheme.bodyMedium;
+  return (theme ?? const TextStyle()).copyWith(
+    color: AppColors.onPrimary,
+    fontWeight: FontWeight.w700,
+  );
+}
 
-  final _NavItem item;
+double _pillWidth(String label, TextStyle style, TextScaler scaler) {
+  final painter = TextPainter(
+    text: TextSpan(text: label, style: style),
+    textDirection: TextDirection.ltr,
+    textScaler: scaler,
+    maxLines: 1,
+  )..layout();
+  return AppSpacing.sm * 2 + _iconSize + AppSpacing.xxs + painter.width;
+}
+
+class _NavIcon extends StatelessWidget {
+  const _NavIcon(this.icon);
+
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    final label = item.label;
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(item.icon, color: AppColors.onPrimary, size: 22),
-            if (label != null) ...[
-              const SizedBox(width: AppSpacing.xxs),
-              Text(label, style: _label(context)),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  TextStyle? _label(BuildContext context) {
-    return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: AppColors.onPrimary,
-      fontWeight: FontWeight.w700,
-    );
+    return Icon(icon, color: AppColors.onPrimary, size: 22);
   }
 }

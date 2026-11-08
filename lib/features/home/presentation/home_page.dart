@@ -142,16 +142,16 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.md,
-            AppSpacing.md,
-            AppSpacing.sm,
+        ColoredBox(
+          color: AppColors.headerWash,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HomeHeader(member: widget.feed.member),
+              _block(0, _banners(hold)),
+            ],
           ),
-          child: HomeHeader(member: widget.feed.member),
         ),
-        _block(0, _banners(hold)),
         _block(
           1,
           HomeProductSection(
