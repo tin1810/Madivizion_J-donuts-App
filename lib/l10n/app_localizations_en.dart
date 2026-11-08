@@ -137,6 +137,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get birthMonthHint => 'Month';
 
   @override
+  String get monthJanuary => 'January';
+
+  @override
+  String get monthFebruary => 'February';
+
+  @override
+  String get monthMarch => 'March';
+
+  @override
+  String get monthApril => 'April';
+
+  @override
+  String get monthMay => 'May';
+
+  @override
+  String get monthJune => 'June';
+
+  @override
+  String get monthJuly => 'July';
+
+  @override
+  String get monthAugust => 'August';
+
+  @override
+  String get monthSeptember => 'September';
+
+  @override
+  String get monthOctober => 'October';
+
+  @override
+  String get monthNovember => 'November';
+
+  @override
+  String get monthDecember => 'December';
+
+  @override
   String get birthDayHint => 'Day';
 
   @override
@@ -171,6 +207,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeTitle => 'Home';
+
+  @override
+  String get homeSeasonal => 'Seasonal specials';
+
+  @override
+  String get homePopular => 'Popular 🔥';
+
+  @override
+  String get homeOrderAgain => 'Order again';
+
+  @override
+  String homePointsLeft(int points, String tier) {
+    return '$points points left to become $tier';
+  }
+
+  @override
+  String homeShops(int count) {
+    return 'There are $count J\'Donut shops near you';
+  }
+
+  @override
+  String get homeExploreNow => 'Explore now';
+
+  @override
+  String get homeOrderOnline => 'Order online';
+
+  @override
+  String get homeSectionEmpty => 'Nothing here yet';
+
+  @override
+  String get homeSectionError => 'Couldn\'t load this section';
+
+  @override
+  String get homeMemberError => 'Couldn\'t load your profile';
+
+  @override
+  String homeDiscount(int percent) {
+    return '$percent% off';
+  }
+
+  @override
+  String get homeTryAgain => 'Try again';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navReward => 'Reward';
+
+  @override
+  String get navNearby => 'Nearby';
+
+  @override
+  String get navWallet => 'Wallet';
+
+  @override
+  String get rewardsTitle => 'J\' Donuts Rewards';
 
   @override
   String get settingsTitle => 'Settings';

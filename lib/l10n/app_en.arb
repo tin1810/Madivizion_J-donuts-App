@@ -178,6 +178,18 @@
   "@birthMonthHint": {
     "description": "Hint for the birth month"
   },
+  "monthJanuary": "January",
+  "monthFebruary": "February",
+  "monthMarch": "March",
+  "monthApril": "April",
+  "monthMay": "May",
+  "monthJune": "June",
+  "monthJuly": "July",
+  "monthAugust": "August",
+  "monthSeptember": "September",
+  "monthOctober": "October",
+  "monthNovember": "November",
+  "monthDecember": "December",
   "birthDayHint": "Day",
   "@birthDayHint": {
     "description": "Hint for the birth day"
@@ -224,7 +236,85 @@
   },
   "homeTitle": "Home",
   "@homeTitle": {
-    "description": "Placeholder title for the home route"
+    "description": "Short name of the home screen"
+  },
+  "homeSeasonal": "Seasonal specials",
+  "@homeSeasonal": {
+    "description": "Home row of seasonal products"
+  },
+  "homePopular": "Popular 🔥",
+  "@homePopular": {
+    "description": "Home row of popular products"
+  },
+  "homeOrderAgain": "Order again",
+  "@homeOrderAgain": {
+    "description": "Home row of products the member can order again"
+  },
+  "homePointsLeft": "{points} points left to become {tier}",
+  "@homePointsLeft": {
+    "description": "Points remaining before the next tier",
+    "placeholders": {
+      "points": {"type": "int", "example": "500"},
+      "tier": {"type": "String", "example": "Gold"}
+    }
+  },
+  "homeShops": "There are {count} J'Donut shops near you",
+  "@homeShops": {
+    "description": "Shop strip heading, using the number of shops in the database",
+    "placeholders": {
+      "count": {"type": "int", "example": "4"}
+    }
+  },
+  "homeExploreNow": "Explore now",
+  "@homeExploreNow": {
+    "description": "Display-only shop action"
+  },
+  "homeOrderOnline": "Order online",
+  "@homeOrderOnline": {
+    "description": "Display-only shop action"
+  },
+  "homeSectionEmpty": "Nothing here yet",
+  "@homeSectionEmpty": {
+    "description": "Shown when a Home section has no rows"
+  },
+  "homeSectionError": "Couldn't load this section",
+  "@homeSectionError": {
+    "description": "Shown when a Home section fails to read"
+  },
+  "homeMemberError": "Couldn't load your profile",
+  "@homeMemberError": {
+    "description": "Shown when the shared member row cannot be read"
+  },
+  "homeDiscount": "{percent}% off",
+  "@homeDiscount": {
+    "description": "Orange badge on a discounted product",
+    "placeholders": {
+      "percent": {"type": "int", "example": "59"}
+    }
+  },
+  "homeTryAgain": "Try again",
+  "@homeTryAgain": {
+    "description": "Reloads Home after a failed read"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation label for Home"
+  },
+  "navReward": "Reward",
+  "@navReward": {
+    "description": "Bottom navigation label for Reward"
+  },
+  "navNearby": "Nearby",
+  "@navNearby": {
+    "description": "Placeholder title for the nearby tab"
+  },
+  "navWallet": "Wallet",
+  "@navWallet": {
+    "description": "Placeholder title for the wallet tab"
+  },
+  "rewardsTitle": "J' Donuts Rewards",
+  "@rewardsTitle": {
+    "description": "Title of the Reward tab until the rewards screen is built"
   },
   "settingsTitle": "Settings",
   "@settingsTitle": {

@@ -90,7 +90,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('CONTINUE'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('birth-month')), 'May');
+    await tester.tap(find.byKey(const Key('birth-month')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('birth-month-May')));
+    await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('birth-day')), '1');
     await tester.enterText(find.byKey(const Key('birth-year')), '1980');
     await tester.pumpAndSettle();

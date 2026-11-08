@@ -3,10 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_routes.dart';
 import 'package:madivizion_jdonuts_app/app/router/route_placeholder.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
+import 'package:madivizion_jdonuts_app/app/shell/app_shell.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/onboarding/onboarding_page.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_flow.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_state.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
+import 'package:madivizion_jdonuts_app/features/home/presentation/home_page.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/presentation/rewards_page.dart';
 import 'package:madivizion_jdonuts_app/features/welcome/presentation/welcome_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
@@ -69,28 +72,61 @@ GoRouter createRouter({required SessionListenable session}) {
         path: AppRoutes.welcome,
         builder: (context, state) => const WelcomePage(),
       ),
-      _titledRoute(
-        path: AppRoutes.home,
-        title: (context) => AppLocalizations.of(context).homeTitle,
-      ),
-      GoRoute(
-        path: AppRoutes.settings,
-        builder: (context, state) => const SettingsPage(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, shell) => AppShell(shell: shell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.rewards,
+                builder: (context, state) => const RewardsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.nearby,
+                builder: (context, state) {
+                  return RoutePlaceholder(
+                    title: AppLocalizations.of(context).navNearby,
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.wallet,
+                builder: (context, state) {
+                  return RoutePlaceholder(
+                    title: AppLocalizations.of(context).navWallet,
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.settings,
+                builder: (context, state) => const SettingsPage(),
+              ),
+            ],
+          ),
+        ],
       ),
       _productRoute(),
     ],
-  );
-}
-
-GoRoute _titledRoute({
-  required String path,
-  required String Function(BuildContext context) title,
-}) {
-  return GoRoute(
-    path: path,
-    builder: (context, state) {
-      return RoutePlaceholder(title: title(context));
-    },
   );
 }
 

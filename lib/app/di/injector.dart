@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madivizion_jdonuts_app/app/connectivity/bloc_link_read.dart';
 import 'package:madivizion_jdonuts_app/app/connectivity/link_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
 import 'package:madivizion_jdonuts_app/core/network/link_phase.dart';
+import 'package:madivizion_jdonuts_app/core/network/link_read.dart';
 import 'package:madivizion_jdonuts_app/core/network/link_watch.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/database_opener.dart';
@@ -26,6 +28,10 @@ import 'package:madivizion_jdonuts_app/features/catalog/data/disk_image_cache.da
 import 'package:madivizion_jdonuts_app/features/catalog/data/http_image_fetcher.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/data/memory_image_cache.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/domain/image_cache.dart';
+import 'package:madivizion_jdonuts_app/features/home/data/bundled_catalog_source.dart';
+import 'package:madivizion_jdonuts_app/features/home/data/drift_catalog_repository.dart';
+import 'package:madivizion_jdonuts_app/features/home/data/memory_catalog_repository.dart';
+import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
 
 /// Composition root. Widgets resolve dependencies from here.
 final GetIt injector = GetIt.instance;
@@ -39,12 +45,14 @@ Future<void> configureDependencies({
   AuthPacing? pacing,
   SecondTicker? ticker,
   LinkWatch? linkWatch,
+  CatalogRepository? catalog,
 }) async {
   injector.registerLazySingleton<BlocObserver>(AppBlocObserver.new);
   final repository = authRepository ?? await _openAuthRepository();
   _registerAuth(repository, pacing: pacing, ticker: ticker);
   _registerSession();
   _registerLink(linkWatch ?? const FixedLinkWatch(LinkPhase.online));
+  _registerCatalog(catalog, production: authRepository == null);
   if (authRepository == null) {
     await _registerProductionImages();
     return;
@@ -57,9 +65,27 @@ Future<void> configureDependencies({
   );
 }
 
+void _registerCatalog(CatalogRepository? catalog, {required bool production}) {
+  if (catalog != null) {
+    injector.registerSingleton<CatalogRepository>(catalog);
+    return;
+  }
+  if (!production) {
+    injector.registerSingleton<CatalogRepository>(MemoryCatalogRepository());
+    return;
+  }
+  injector.registerSingleton<CatalogRepository>(
+    DriftCatalogRepository(
+      database: injector<AppDatabase>(),
+      source: const BundledCatalogSource(),
+    ),
+  );
+}
+
 void _registerLink(LinkWatch watch) {
   final bloc = LinkBloc(watch);
   injector.registerSingleton<LinkBloc>(bloc, dispose: (value) => value.close());
+  injector.registerSingleton<LinkRead>(BlocLinkRead(bloc));
   bloc.add(const LinkStarted());
 }
 

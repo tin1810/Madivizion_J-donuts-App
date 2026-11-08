@@ -6,6 +6,9 @@ abstract final class AppRoutes {
   static const String signInPhone = '/sign-in/phone';
   static const String welcome = '/welcome';
   static const String home = '/home';
+  static const String rewards = '/rewards';
+  static const String nearby = '/nearby';
+  static const String wallet = '/wallet';
   static const String settings = '/settings';
   static const String productId = 'id';
   static const String product = '/product/:$productId';

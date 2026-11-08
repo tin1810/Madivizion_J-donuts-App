@@ -16,6 +16,9 @@ class AuthField extends StatefulWidget {
     this.keyboardType,
     this.inputFormatters,
     this.onBlur,
+    this.readOnly = false,
+    this.onTap,
+    this.suffixIcon,
     super.key,
   });
 
@@ -29,6 +32,9 @@ class AuthField extends StatefulWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onBlur;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final Widget? suffixIcon;
 
   @override
   State<AuthField> createState() => _AuthFieldState();
@@ -83,6 +89,8 @@ class _AuthFieldState extends State<AuthField> {
           controller: widget.controller,
           focusNode: _focus,
           enabled: widget.enabled,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
           keyboardType: widget.keyboardType,
           inputFormatters: widget.inputFormatters,
           onChanged: widget.onChanged,
@@ -95,6 +103,7 @@ class _AuthFieldState extends State<AuthField> {
                 : const BoxConstraints(minWidth: 0, minHeight: 0),
             contentPadding: widget.prefix == null ? null : _prefixPadding,
             errorText: null,
+            suffixIcon: widget.suffixIcon,
           ),
         ),
         _ErrorLine(message: widget.error),

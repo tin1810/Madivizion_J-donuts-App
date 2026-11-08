@@ -12,6 +12,20 @@ Future<void> seedCatalog(AppDatabase database, String raw) async {
   await database.transaction(() => _write(database, seed));
 }
 
+/// Replaces catalog rows from a refresh. Accounts in the users table stay.
+Future<void> replaceCatalog(AppDatabase database, String raw) async {
+  final seed = CatalogSeed.parse(raw);
+  await database.transaction(() async {
+    await database.delete(database.storedProducts).go();
+    await database.delete(database.storedBanners).go();
+    await database.delete(database.storedShops).go();
+    await database.delete(database.storedMembers).go();
+    await database.delete(database.storedTiers).go();
+    await database.delete(database.storedChallenges).go();
+    await _write(database, seed);
+  });
+}
+
 Future<void> _write(AppDatabase database, CatalogSeed seed) async {
   await database.into(database.storedMembers).insert(_member(seed.member));
   await database.batch((batch) {

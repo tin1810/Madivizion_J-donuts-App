@@ -334,6 +334,78 @@ abstract class AppLocalizations {
   /// **'Month'**
   String get birthMonthHint;
 
+  /// No description provided for @monthJanuary.
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get monthJanuary;
+
+  /// No description provided for @monthFebruary.
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get monthFebruary;
+
+  /// No description provided for @monthMarch.
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get monthMarch;
+
+  /// No description provided for @monthApril.
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get monthApril;
+
+  /// No description provided for @monthMay.
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get monthMay;
+
+  /// No description provided for @monthJune.
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get monthJune;
+
+  /// No description provided for @monthJuly.
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get monthJuly;
+
+  /// No description provided for @monthAugust.
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get monthAugust;
+
+  /// No description provided for @monthSeptember.
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get monthSeptember;
+
+  /// No description provided for @monthOctober.
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get monthOctober;
+
+  /// No description provided for @monthNovember.
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get monthNovember;
+
+  /// No description provided for @monthDecember.
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get monthDecember;
+
   /// Hint for the birth day
   ///
   /// In en, this message translates to:
@@ -400,11 +472,113 @@ abstract class AppLocalizations {
   /// **'Image unavailable'**
   String get imageUnavailable;
 
-  /// Placeholder title for the home route
+  /// Short name of the home screen
   ///
   /// In en, this message translates to:
   /// **'Home'**
   String get homeTitle;
+
+  /// Home row of seasonal products
+  ///
+  /// In en, this message translates to:
+  /// **'Seasonal specials'**
+  String get homeSeasonal;
+
+  /// Home row of popular products
+  ///
+  /// In en, this message translates to:
+  /// **'Popular 🔥'**
+  String get homePopular;
+
+  /// Home row of products the member can order again
+  ///
+  /// In en, this message translates to:
+  /// **'Order again'**
+  String get homeOrderAgain;
+
+  /// Points remaining before the next tier
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points left to become {tier}'**
+  String homePointsLeft(int points, String tier);
+
+  /// Shop strip heading, using the number of shops in the database
+  ///
+  /// In en, this message translates to:
+  /// **'There are {count} J\'Donut shops near you'**
+  String homeShops(int count);
+
+  /// Display-only shop action
+  ///
+  /// In en, this message translates to:
+  /// **'Explore now'**
+  String get homeExploreNow;
+
+  /// Display-only shop action
+  ///
+  /// In en, this message translates to:
+  /// **'Order online'**
+  String get homeOrderOnline;
+
+  /// Shown when a Home section has no rows
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet'**
+  String get homeSectionEmpty;
+
+  /// Shown when a Home section fails to read
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this section'**
+  String get homeSectionError;
+
+  /// Shown when the shared member row cannot be read
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your profile'**
+  String get homeMemberError;
+
+  /// Orange badge on a discounted product
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% off'**
+  String homeDiscount(int percent);
+
+  /// Reloads Home after a failed read
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get homeTryAgain;
+
+  /// Bottom navigation label for Home
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// Bottom navigation label for Reward
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get navReward;
+
+  /// Placeholder title for the nearby tab
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby'**
+  String get navNearby;
+
+  /// Placeholder title for the wallet tab
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get navWallet;
+
+  /// Title of the Reward tab until the rewards screen is built
+  ///
+  /// In en, this message translates to:
+  /// **'J\' Donuts Rewards'**
+  String get rewardsTitle;
 
   /// Placeholder title for the settings route
   ///

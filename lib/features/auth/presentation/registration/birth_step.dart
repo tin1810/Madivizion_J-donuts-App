@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/auth_field.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/birth_month_sheet.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_bloc.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_copy.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_event.dart';
@@ -54,8 +55,13 @@ class _BirthStepState extends State<BirthStep> {
           controller: _month,
           hint: l10n.birthMonthHint,
           enabled: enabled,
-          onChanged: (value) => bloc.add(BirthMonthChanged(value)),
-          onBlur: () => bloc.add(const BirthBlurred()),
+          readOnly: true,
+          suffixIcon: const Icon(
+            Icons.calendar_month_outlined,
+            color: AppColors.textSecondary,
+          ),
+          onChanged: (_) {},
+          onTap: enabled ? () => _pickMonth(bloc) : null,
         ),
         const SizedBox(height: AppSpacing.md),
         AuthField(
@@ -86,5 +92,23 @@ class _BirthStepState extends State<BirthStep> {
 
   TextStyle? _title(BuildContext context) {
     return Theme.of(context).textTheme.headlineMedium;
+  }
+
+  Future<void> _pickMonth(RegistrationBloc bloc) async {
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      builder: (context) => BirthMonthSheet(selected: _month.text),
+    );
+    if (!mounted) {
+      return;
+    }
+    bloc.add(const BirthBlurred());
+    if (picked == null) {
+      return;
+    }
+    _month.text = picked;
+    bloc.add(BirthMonthChanged(picked));
   }
 }
