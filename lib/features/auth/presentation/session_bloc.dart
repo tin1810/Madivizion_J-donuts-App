@@ -17,6 +17,13 @@ final class SessionLoggedOut extends SessionEvent {
   const SessionLoggedOut();
 }
 
+/// The account was just stored, so the route guard can move on.
+final class SessionEstablished extends SessionEvent {
+  const SessionEstablished(this.userId);
+
+  final String userId;
+}
+
 sealed class SessionState {
   const SessionState();
 }
@@ -54,6 +61,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       super(const SessionUnknown()) {
     on<SessionStarted>(_onStarted);
     on<SessionLoggedOut>(_onLoggedOut);
+    on<SessionEstablished>(_onEstablished);
   }
 
   final ReadSession _readSession;
@@ -73,6 +81,10 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         addError(failure);
         emit(const SessionUnauthenticated());
     }
+  }
+
+  void _onEstablished(SessionEstablished event, Emitter<SessionState> emit) {
+    emit(SessionAuthenticated(event.userId));
   }
 
   Future<void> _onLoggedOut(

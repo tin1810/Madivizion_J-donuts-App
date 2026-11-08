@@ -4,6 +4,7 @@ abstract final class AppRoutes {
   static const String onboarding = '/onboarding';
   static const String registerPhone = '/register/phone';
   static const String signInPhone = '/sign-in/phone';
+  static const String welcome = '/welcome';
   static const String home = '/home';
   static const String settings = '/settings';
   static const String productId = 'id';

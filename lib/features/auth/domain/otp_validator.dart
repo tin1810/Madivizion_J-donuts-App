@@ -3,6 +3,7 @@ abstract final class OtpRules {
   static const String acceptedCode = '123456';
   static const int length = 6;
   static const int maxAttempts = 3;
+  static const Duration resendWait = Duration(minutes: 5);
 }
 
 /// Outcome of checking one OTP entry.
@@ -22,10 +23,8 @@ enum OtpRejection { incomplete, incorrect, locked }
 
 /// The code was incomplete, wrong, or entry is locked until resend.
 final class OtpRejected extends OtpCheck {
-  const OtpRejected({
-    required this.reason,
-    required int failedAttempts,
-  }) : super(failedAttempts);
+  const OtpRejected({required this.reason, required int failedAttempts})
+    : super(failedAttempts);
 
   final OtpRejection reason;
 
@@ -43,10 +42,7 @@ final class OtpRejected extends OtpCheck {
 final RegExp _otpDigits = RegExp('^\\d{${OtpRules.length}}\$');
 
 /// Accepts only [OtpRules.acceptedCode]. The third wrong code locks entry.
-OtpCheck validateOtp({
-  required String code,
-  required int failedAttempts,
-}) {
+OtpCheck validateOtp({required String code, required int failedAttempts}) {
   if (failedAttempts >= OtpRules.maxAttempts) {
     return OtpRejected(
       reason: OtpRejection.locked,

@@ -4,6 +4,8 @@ import 'package:madivizion_jdonuts_app/app/router/app_routes.dart';
 import 'package:madivizion_jdonuts_app/app/router/route_placeholder.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/onboarding/onboarding_page.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_flow.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/registration_state.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/settings_page.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
@@ -50,13 +52,21 @@ GoRouter createRouter({required SessionListenable session}) {
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingPage(),
       ),
-      _titledRoute(
+      GoRoute(
         path: AppRoutes.registerPhone,
-        title: (context) => AppLocalizations.of(context).phoneTitle,
+        builder: (context, state) {
+          return const RegistrationFlow(purpose: RegistrationPurpose.register);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.signInPhone,
+        builder: (context, state) {
+          return const RegistrationFlow(purpose: RegistrationPurpose.signIn);
+        },
       ),
       _titledRoute(
-        path: AppRoutes.signInPhone,
-        title: (context) => AppLocalizations.of(context).phoneTitle,
+        path: AppRoutes.welcome,
+        title: (context) => AppLocalizations.of(context).welcomeTitle,
       ),
       _titledRoute(
         path: AppRoutes.home,

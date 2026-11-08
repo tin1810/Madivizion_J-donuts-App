@@ -9,10 +9,12 @@ import 'package:madivizion_jdonuts_app/features/auth/data/database_opener.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/drift_auth_repository.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/secure_session_store.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/auth_repository.dart';
+import 'package:madivizion_jdonuts_app/features/auth/domain/auth_timing.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/log_out.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/read_session.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/register_account.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/sign_in.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/registration/second_ticker.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/session_bloc.dart';
 
 /// Composition root. Widgets resolve dependencies from here.
@@ -22,10 +24,14 @@ final GetIt injector = GetIt.instance;
 GoRouter get appRouter => injector<GoRouter>();
 
 /// Registers app-wide services. Tests can pass [authRepository].
-Future<void> configureDependencies({AuthRepository? authRepository}) async {
+Future<void> configureDependencies({
+  AuthRepository? authRepository,
+  AuthPacing? pacing,
+  SecondTicker? ticker,
+}) async {
   injector.registerLazySingleton<BlocObserver>(AppBlocObserver.new);
   final repository = authRepository ?? await _openAuthRepository();
-  _registerAuth(repository);
+  _registerAuth(repository, pacing: pacing, ticker: ticker);
   _registerSession();
 }
 
@@ -37,9 +43,15 @@ Future<AuthRepository> _openAuthRepository() async {
   );
 }
 
-void _registerAuth(AuthRepository repository) {
+void _registerAuth(
+  AuthRepository repository, {
+  AuthPacing? pacing,
+  SecondTicker? ticker,
+}) {
   injector
     ..registerSingleton<AuthRepository>(repository)
+    ..registerSingleton<AuthPacing>(pacing ?? const AuthPacing())
+    ..registerSingleton<SecondTicker>(ticker ?? const SecondTicker())
     ..registerSingleton<RegisterAccount>(RegisterAccount(repository))
     ..registerSingleton<SignIn>(SignIn(repository))
     ..registerSingleton<ReadSession>(ReadSession(repository))

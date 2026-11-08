@@ -23,6 +23,15 @@ void main() {
     expect(signIn, isNull);
   });
 
+  test('a signed in user can stay on welcome', () {
+    final location = authRedirect(
+      isSignedIn: true,
+      location: AppRoutes.welcome,
+    );
+
+    expect(location, isNull);
+  });
+
   test('signed in user leaving the phone step is sent home', () {
     final location = authRedirect(
       isSignedIn: true,

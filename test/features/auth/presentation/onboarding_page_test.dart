@@ -17,7 +17,7 @@ void main() {
     await tester.tap(find.text("LET'S GET STARTED"));
     await tester.pumpAndSettle();
 
-    expect(find.text('Phone number'), findsWidgets);
+    expect(find.textContaining('Enter your phone'), findsOneWidget);
   });
 
   testWidgets('log in opens the phone step', (tester) async {
@@ -28,7 +28,7 @@ void main() {
     await tester.tap(find.text('Log in'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Phone number'), findsWidgets);
+    expect(find.textContaining('Enter your phone'), findsOneWidget);
   });
 
   testWidgets('google and terms open placeholder sheets', (tester) async {

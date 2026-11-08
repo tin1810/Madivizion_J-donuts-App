@@ -72,7 +72,139 @@
   },
   "phoneTitle": "Phone number",
   "@phoneTitle": {
-    "description": "Title of the phone step until that screen is built"
+    "description": "Short name of the phone step"
+  },
+  "phoneHeadline": "Enter your phone\nnumber",
+  "@phoneHeadline": {
+    "description": "Phone step headline"
+  },
+  "phoneInvalid": "Enter a valid Myanmar mobile number.",
+  "@phoneInvalid": {
+    "description": "Shown after the phone field is left incomplete or invalid"
+  },
+  "phoneUnknown": "This number is not registered. ",
+  "@phoneUnknown": {
+    "description": "Sign-in message before the register link"
+  },
+  "phoneRegisterLink": "Register",
+  "@phoneRegisterLink": {
+    "description": "Link from an unknown number to registration"
+  },
+  "phoneAlready": "This number is already registered. ",
+  "@phoneAlready": {
+    "description": "Registration message before the log in link"
+  },
+  "phoneLogInLink": "Log in",
+  "@phoneLogInLink": {
+    "description": "Link from an existing number to sign in"
+  },
+  "phoneUnavailable": "Something went wrong. Try again.",
+  "@phoneUnavailable": {
+    "description": "Shown when the local account store fails"
+  },
+  "continueAction": "CONTINUE",
+  "@continueAction": {
+    "description": "Submits the current registration step"
+  },
+  "otpHeadline": "Verify your number",
+  "@otpHeadline": {
+    "description": "OTP step headline"
+  },
+  "otpSent": "We've sent 6 digit OTP to {phone}",
+  "@otpSent": {
+    "description": "Tells the user which number received the fake code",
+    "placeholders": {
+      "phone": {
+        "type": "String",
+        "example": "+959254135592"
+      }
+    }
+  },
+  "otpIncorrect": "That code is incorrect.",
+  "@otpIncorrect": {
+    "description": "Shown when the OTP is not 123456"
+  },
+  "otpLocked": "Too many attempts. Resend the code to try again.",
+  "@otpLocked": {
+    "description": "Shown after three wrong OTP codes"
+  },
+  "otpResendWaiting": "Didn't receive the code? resend in {time} min",
+  "@otpResendWaiting": {
+    "description": "Resend countdown while the action is still locked",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "4:59"
+      }
+    }
+  },
+  "otpResendReady": "Didn't receive the code? ",
+  "@otpResendReady": {
+    "description": "Text before the resend action once the timer ends"
+  },
+  "otpResendAction": "Resend",
+  "@otpResendAction": {
+    "description": "Restarts the OTP timer and clears the lock"
+  },
+  "nameHeadline": "What's your\nname?",
+  "@nameHeadline": {
+    "description": "Name step headline"
+  },
+  "nameFirstHint": "First Name",
+  "@nameFirstHint": {
+    "description": "Hint for the required first name"
+  },
+  "nameLastHint": "Last Name",
+  "@nameLastHint": {
+    "description": "Hint for the optional last name"
+  },
+  "nameRequired": "Enter your first name.",
+  "@nameRequired": {
+    "description": "Shown when the first name is empty"
+  },
+  "nameTooLong": "Use 50 characters or fewer.",
+  "@nameTooLong": {
+    "description": "Shown when a name is longer than 50 characters"
+  },
+  "nameInvalid": "Use letters and spaces only.",
+  "@nameInvalid": {
+    "description": "Shown when a name contains digits or symbols"
+  },
+  "birthHeadline": "What's your\ndate of birth?",
+  "@birthHeadline": {
+    "description": "Date of birth step headline"
+  },
+  "birthMonthHint": "Month",
+  "@birthMonthHint": {
+    "description": "Hint for the birth month"
+  },
+  "birthDayHint": "Day",
+  "@birthDayHint": {
+    "description": "Hint for the birth day"
+  },
+  "birthYearHint": "Year",
+  "@birthYearHint": {
+    "description": "Hint for the birth year"
+  },
+  "birthIncomplete": "Enter a complete date of birth.",
+  "@birthIncomplete": {
+    "description": "Shown when month, day, or year is missing"
+  },
+  "birthImpossible": "Enter a real calendar date.",
+  "@birthImpossible": {
+    "description": "Shown for dates such as 31 April"
+  },
+  "birthFuture": "Date of birth cannot be in the future.",
+  "@birthFuture": {
+    "description": "Shown when the date is after today"
+  },
+  "birthTooYoung": "You must be at least 13.",
+  "@birthTooYoung": {
+    "description": "Shown when the person is younger than the minimum age"
+  },
+  "welcomeTitle": "Welcome",
+  "@welcomeTitle": {
+    "description": "Placeholder title after registration, until the welcome screen is built"
   },
   "homeTitle": "Home",
   "@homeTitle": {

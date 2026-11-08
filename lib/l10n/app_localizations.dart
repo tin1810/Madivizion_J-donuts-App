@@ -190,11 +190,191 @@ abstract class AppLocalizations {
   /// **'This document is not included in the test build.'**
   String get onboardingDocumentUnavailable;
 
-  /// Title of the phone step until that screen is built
+  /// Short name of the phone step
   ///
   /// In en, this message translates to:
   /// **'Phone number'**
   String get phoneTitle;
+
+  /// Phone step headline
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone\nnumber'**
+  String get phoneHeadline;
+
+  /// Shown after the phone field is left incomplete or invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid Myanmar mobile number.'**
+  String get phoneInvalid;
+
+  /// Sign-in message before the register link
+  ///
+  /// In en, this message translates to:
+  /// **'This number is not registered. '**
+  String get phoneUnknown;
+
+  /// Link from an unknown number to registration
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get phoneRegisterLink;
+
+  /// Registration message before the log in link
+  ///
+  /// In en, this message translates to:
+  /// **'This number is already registered. '**
+  String get phoneAlready;
+
+  /// Link from an existing number to sign in
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get phoneLogInLink;
+
+  /// Shown when the local account store fails
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get phoneUnavailable;
+
+  /// Submits the current registration step
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE'**
+  String get continueAction;
+
+  /// OTP step headline
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your number'**
+  String get otpHeadline;
+
+  /// Tells the user which number received the fake code
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent 6 digit OTP to {phone}'**
+  String otpSent(String phone);
+
+  /// Shown when the OTP is not 123456
+  ///
+  /// In en, this message translates to:
+  /// **'That code is incorrect.'**
+  String get otpIncorrect;
+
+  /// Shown after three wrong OTP codes
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Resend the code to try again.'**
+  String get otpLocked;
+
+  /// Resend countdown while the action is still locked
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code? resend in {time} min'**
+  String otpResendWaiting(String time);
+
+  /// Text before the resend action once the timer ends
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code? '**
+  String get otpResendReady;
+
+  /// Restarts the OTP timer and clears the lock
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get otpResendAction;
+
+  /// Name step headline
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your\nname?'**
+  String get nameHeadline;
+
+  /// Hint for the required first name
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get nameFirstHint;
+
+  /// Hint for the optional last name
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get nameLastHint;
+
+  /// Shown when the first name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your first name.'**
+  String get nameRequired;
+
+  /// Shown when a name is longer than 50 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Use 50 characters or fewer.'**
+  String get nameTooLong;
+
+  /// Shown when a name contains digits or symbols
+  ///
+  /// In en, this message translates to:
+  /// **'Use letters and spaces only.'**
+  String get nameInvalid;
+
+  /// Date of birth step headline
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your\ndate of birth?'**
+  String get birthHeadline;
+
+  /// Hint for the birth month
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get birthMonthHint;
+
+  /// Hint for the birth day
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get birthDayHint;
+
+  /// Hint for the birth year
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get birthYearHint;
+
+  /// Shown when month, day, or year is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a complete date of birth.'**
+  String get birthIncomplete;
+
+  /// Shown for dates such as 31 April
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a real calendar date.'**
+  String get birthImpossible;
+
+  /// Shown when the date is after today
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth cannot be in the future.'**
+  String get birthFuture;
+
+  /// Shown when the person is younger than the minimum age
+  ///
+  /// In en, this message translates to:
+  /// **'You must be at least 13.'**
+  String get birthTooYoung;
+
+  /// Placeholder title after registration, until the welcome screen is built
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get welcomeTitle;
 
   /// Placeholder title for the home route
   ///
