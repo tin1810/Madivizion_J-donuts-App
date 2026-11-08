@@ -1,8 +1,13 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:madivizion_jdonuts_app/app/di/injector.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
+  Bloc.observer = injector<BlocObserver>();
   runApp(const MyApp());
 }
 
