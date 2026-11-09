@@ -533,7 +533,7 @@ abstract class AppLocalizations {
   /// Shop strip heading, using the number of shops in the database
   ///
   /// In en, this message translates to:
-  /// **'There are {count} J\'Donut shops Near You '**
+  /// **'There are {count} J\'Donut shops'**
   String homeShops(int count);
 
   /// Heading above the nearby shop cards

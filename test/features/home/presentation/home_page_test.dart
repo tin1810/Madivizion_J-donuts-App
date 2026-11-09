@@ -48,6 +48,12 @@ void main() {
     expect(find.text('EXPLORE NOW'), findsOneWidget);
     expect(find.text('Order Online'), findsWidgets);
 
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -700));
+    await tester.pump();
+    expect(find.text('Hania').hitTestable(), findsNothing);
+    expect(find.text('2').hitTestable(), findsOneWidget);
+    expect(find.text('Seasonal specials').hitTestable(), findsOneWidget);
+
     await tester.tap(find.text('Mistletoe Romance box'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));

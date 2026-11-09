@@ -38,7 +38,7 @@ class _Loaded extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _Banner(text: l10n.homeShops(shops.length)),
-         
+          const _NearYou(),
           const SizedBox(height: AppSpacing.sm),
           SizedBox(
             height: _cardHeight,

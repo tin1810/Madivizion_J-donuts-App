@@ -27,7 +27,7 @@ class HomeHeader extends StatelessWidget {
     };
     final top = MediaQuery.paddingOf(context).top;
     return SizedBox(
-      height: top + _profileSpace + 180,
+      height: homeHeaderHeight(top),
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
@@ -71,8 +71,12 @@ class HomeHeader extends StatelessWidget {
 
 const _profileSpace = 168.0;
 const _bannerSpace = 220.0;
+
+/// Height of the member row, bell, and banner stack, including the status bar.
+double homeHeaderHeight(double topInset) => topInset + _profileSpace + 180;
 const _bellIcon = 21.0;
 const _badgeSize = 30.0;
+const _bellWidth = 68.0;
 
 class _Loaded extends StatelessWidget {
   const _Loaded({required this.profile, this.registeredName});
@@ -104,7 +108,7 @@ class _Loaded extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            _Bell(count: profile.notificationCount),
+            const SizedBox(width: _bellWidth),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -182,8 +186,8 @@ class _Points extends StatelessWidget {
   }
 }
 
-class _Bell extends StatelessWidget {
-  const _Bell({required this.count});
+class HomeBell extends StatelessWidget {
+  const HomeBell({required this.count, super.key});
 
   final int count;
 
@@ -192,11 +196,18 @@ class _Bell extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.headerBell,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppRadius.lg),
           bottomLeft: Radius.circular(AppRadius.lg),
         ),
         border: Border.all(color: AppColors.border, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.16),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: SizedBox(
         height: _badgeSize,

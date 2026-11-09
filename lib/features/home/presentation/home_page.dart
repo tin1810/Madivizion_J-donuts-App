@@ -13,6 +13,7 @@ import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/banner_carousel.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/home_bloc.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/home_header.dart';
+import 'package:madivizion_jdonuts_app/features/home/presentation/home_scroll_header.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/home_sections.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/home_skeleton.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/shop_strip.dart';
@@ -119,14 +120,7 @@ class _Ready extends StatelessWidget {
     return RefreshIndicator(
       color: AppColors.primary,
       onRefresh: () => _refresh(context),
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: _Body(feed: feed, registeredName: registeredName),
-          ),
-        ],
-      ),
+      child: _Body(feed: feed, registeredName: registeredName),
     );
   }
 
@@ -184,55 +178,91 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final hold = AppMotion.resolve(context, AppMotion.bannerHold);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final top = MediaQuery.paddingOf(context).top;
+    final headerHeight = homeHeaderHeight(top) + _headerGap;
+    final count = switch (widget.feed.member) {
+      Success<MemberProfile>(:final value) => value.notificationCount,
+      Failure<MemberProfile>() => null,
+    };
+    return Stack(
       children: [
-        Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(
-            color: AppColors.headerWash,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(AppRadius.lg),
-              bottomRight: Radius.circular(AppRadius.lg),
+        _scroll(l10n, hold, headerHeight),
+        if (count != null)
+          Positioned(
+            top: top + 21,
+            right: 0,
+            child: HomeBell(count: count),
+          ),
+      ],
+    );
+  }
+
+  Widget _scroll(AppLocalizations l10n, Duration hold, double headerHeight) {
+    return CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: [
+        SliverPersistentHeader(
+          delegate: HomeScrollHeader(
+            extent: headerHeight,
+            child: Column(
+              children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                    color: AppColors.headerWash,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppRadius.lg),
+                      bottomRight: Radius.circular(AppRadius.lg),
+                    ),
+                  ),
+                  child: HomeHeader(
+                    member: widget.feed.member,
+                    registeredName: widget.registeredName,
+                    banners: Entrance(
+                      animation: _entrance,
+                      start: 0.08,
+                      end: 0.43,
+                      child: _banners(hold),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: _headerGap),
+              ],
             ),
           ),
-          child: HomeHeader(
-            member: widget.feed.member,
-            registeredName: widget.registeredName,
-            banners: Entrance(
-              animation: _entrance,
-              start: 0.08,
-              end: 0.43,
-              child: _banners(hold),
-            ),
+        ),
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _block(
+                1,
+                HomeProductSection(
+                  title: l10n.homeSeasonal,
+                  products: widget.feed.seasonal,
+                  wideFrame: true,
+                ),
+              ),
+              _block(
+                2,
+                HomeProductSection(
+                  title: l10n.homePopular,
+                  products: widget.feed.popular,
+                  photoFrame: true,
+                ),
+              ),
+              _block(
+                3,
+                HomeProductSection(
+                  title: l10n.homeOrderAgain,
+                  products: widget.feed.orderAgain,
+                ),
+              ),
+              _block(4, ShopStrip(shops: widget.feed.shops)),
+              const SizedBox(height: AppSpacing.lg),
+            ],
           ),
         ),
-        SizedBox(height: 25),
-        _block(
-          1,
-          HomeProductSection(
-            title: l10n.homeSeasonal,
-            products: widget.feed.seasonal,
-            wideFrame: true,
-          ),
-        ),
-        _block(
-          2,
-          HomeProductSection(
-            title: l10n.homePopular,
-            products: widget.feed.popular,
-            photoFrame: true,
-          ),
-        ),
-        _block(
-          3,
-          HomeProductSection(
-            title: l10n.homeOrderAgain,
-            products: widget.feed.orderAgain,
-          ),
-        ),
-        _block(4, ShopStrip(shops: widget.feed.shops)),
-        const SizedBox(height: AppSpacing.lg),
       ],
     );
   }
@@ -265,6 +295,8 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+const double _headerGap = 25;
 
 class _SectionNote extends StatelessWidget {
   const _SectionNote({required this.text});
