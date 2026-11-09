@@ -105,6 +105,7 @@ class SeedBanner {
     required this.title,
     required this.imageUrl,
     required this.sortOrder,
+    this.badge,
   });
 
   factory SeedBanner.fromJson(Map<String, Object?> json) {
@@ -113,6 +114,7 @@ class SeedBanner {
       title: _text(json, 'title'),
       imageUrl: _text(json, 'imageUrl'),
       sortOrder: _count(json, 'sortOrder'),
+      badge: _optionalText(json, 'badge'),
     );
   }
 
@@ -120,6 +122,7 @@ class SeedBanner {
   final String title;
   final String imageUrl;
   final int sortOrder;
+  final String? badge;
 }
 
 class SeedProduct {

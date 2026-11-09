@@ -499,7 +499,7 @@ abstract class AppLocalizations {
   /// Home row of seasonal products
   ///
   /// In en, this message translates to:
-  /// **'Seasonal specials💕'**
+  /// **'Seasonal specials'**
   String get homeSeasonal;
 
   /// Home row of popular products
@@ -610,11 +610,53 @@ abstract class AppLocalizations {
   /// **'Wallet'**
   String get navWallet;
 
-  /// Title of the Reward tab until the rewards screen is built
+  /// Title of the Rewards screen
   ///
   /// In en, this message translates to:
   /// **'J\' Donuts Rewards'**
   String get rewardsTitle;
+
+  /// Label on the orange rewards count pill
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards'**
+  String get rewardsBadge;
+
+  /// Label inside the points ring
+  ///
+  /// In en, this message translates to:
+  /// **'Total points'**
+  String get rewardsTotalPoints;
+
+  /// Selected tab for earn challenges
+  ///
+  /// In en, this message translates to:
+  /// **'Eat more earn more'**
+  String get rewardsEarnTab;
+
+  /// Tab for gift challenges
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get rewardsGiftTab;
+
+  /// Button on a challenge card
+  ///
+  /// In en, this message translates to:
+  /// **'EARN'**
+  String get rewardsEarn;
+
+  /// Points awarded by a challenge
+  ///
+  /// In en, this message translates to:
+  /// **'{points} pts'**
+  String rewardsPoints(int points);
+
+  /// Shown when the Gift tab has no challenges
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet'**
+  String get rewardsGiftEmpty;
 
   /// Placeholder title for the settings route
   ///

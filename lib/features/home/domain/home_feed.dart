@@ -47,11 +47,13 @@ class HomeBanner {
     required this.id,
     required this.title,
     required this.imageUrl,
+    this.badge,
   });
 
   final String id;
   final String title;
   final String imageUrl;
+  final String? badge;
 }
 
 /// A nearby shop. The card is display-only.

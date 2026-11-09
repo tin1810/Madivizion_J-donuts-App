@@ -34,14 +34,30 @@
     {
       "id": "banner_central",
       "title": "We are now at Central Boulevard",
-      "imageUrl": "assets/catalog/banner_central.png",
+      "badge": "New shop",
+      "imageUrl": "assets/catalog/p_christmas_mix.png",
       "sortOrder": 0
     },
     {
       "id": "banner_hot",
       "title": "Hot and fresh",
-      "imageUrl": "assets/catalog/banner_hot.png",
+      "badge": "Fresh",
+      "imageUrl": "assets/catalog/p_strawberry.png",
       "sortOrder": 1
+    },
+    {
+      "id": "banner_junction",
+      "title": "We are now at Junction City",
+      "badge": "Nearby",
+      "imageUrl": "assets/catalog/p_coconut.png",
+      "sortOrder": 2
+    },
+    {
+      "id": "banner_plaza",
+      "title": "We are now at Myanmar Plaza",
+      "badge": "Open",
+      "imageUrl": "assets/catalog/p_mistletoe.png",
+      "sortOrder": 3
     }
   ],
   "products": [

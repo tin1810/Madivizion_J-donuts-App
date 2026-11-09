@@ -218,7 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTitle => 'Home';
 
   @override
-  String get homeSeasonal => 'Seasonal specials💕';
+  String get homeSeasonal => 'Seasonal specials';
 
   @override
   String get homePopular => 'Popular 🔥';
@@ -284,6 +284,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rewardsTitle => 'J\' Donuts Rewards';
+
+  @override
+  String get rewardsBadge => 'Rewards';
+
+  @override
+  String get rewardsTotalPoints => 'Total points';
+
+  @override
+  String get rewardsEarnTab => 'Eat more earn more';
+
+  @override
+  String get rewardsGiftTab => 'Gift';
+
+  @override
+  String get rewardsEarn => 'EARN';
+
+  @override
+  String rewardsPoints(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get rewardsGiftEmpty => 'Nothing here yet';
 
   @override
   String get settingsTitle => 'Settings';

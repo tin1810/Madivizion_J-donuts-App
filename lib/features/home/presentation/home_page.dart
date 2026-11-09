@@ -142,16 +142,26 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ColoredBox(
-          color: AppColors.headerWash,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HomeHeader(member: widget.feed.member),
-              _block(0, _banners(hold)),
-            ],
+        Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(
+            color: AppColors.headerWash,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(AppRadius.lg),
+              bottomRight: Radius.circular(AppRadius.lg),
+            ),
+          ),
+          child: HomeHeader(
+            member: widget.feed.member,
+            banners: Entrance(
+              animation: _entrance,
+              start: 0.08,
+              end: 0.43,
+              child: _banners(hold),
+            ),
           ),
         ),
+        SizedBox(height: 50),
         _block(
           1,
           HomeProductSection(

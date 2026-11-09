@@ -35,10 +35,10 @@ void main() {
     ]);
     expect(seasonal.map((item) => item.id), isNot(contains('p_coconut')));
     expect((feed.shops as Success<List<HomeShop>>).value, hasLength(4));
-    expect(
-      (feed.banners as Success<List<HomeBanner>>).value.first.title,
-      'We are now at Central Boulevard',
-    );
+    final banners = (feed.banners as Success<List<HomeBanner>>).value;
+    expect(banners, hasLength(4));
+    expect(banners.first.title, 'We are now at Central Boulevard');
+    expect(banners.first.badge, 'New shop');
     final coconut = await repository.findProduct('p_coconut');
     final product = (coconut as Success<CatalogProduct>).value;
     expect(product.code, 'JD022123');

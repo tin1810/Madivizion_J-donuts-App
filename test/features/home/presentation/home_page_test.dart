@@ -25,6 +25,8 @@ void main() {
   testWidgets('home shows the shared member, sections, and a product route', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     final bloc = HomeBloc(
       catalog: _FixedCatalog(_feed()),
       link: ScriptLink(LinkPhase.offline),

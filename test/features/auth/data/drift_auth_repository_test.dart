@@ -29,8 +29,8 @@ void main() {
 
   tearDown(() => database.close());
 
-  test('schema version 2 still stores and reads an account', () async {
-    expect(database.schemaVersion, 2);
+  test('the database still stores and reads an account', () async {
+    expect(database.schemaVersion, 3);
 
     final registered = await repository.register(account);
     final found = await repository.findByPhone(account.phoneE164);

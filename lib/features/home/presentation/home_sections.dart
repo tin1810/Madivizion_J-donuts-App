@@ -25,7 +25,7 @@ class HomeProductSection extends StatelessWidget {
       children: [
         _Heading(title: title),
         const SizedBox(height: AppSpacing.sm),
-        SizedBox(height: 232, child: _body(context)),
+        SizedBox(height: 216, child: _body(context)),
       ],
     );
   }
@@ -133,7 +133,7 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 170,
+      width: 168,
       child: InkWell(
         onTap: () => context.push(AppRoutes.productLocation(product.id)),
         child: Column(
@@ -179,25 +179,19 @@ class _Art extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(AppRadius.lg)),
         child: SizedBox(
-          height: 180,
+          height: 168,
           width: double.infinity,
           child: Stack(
             fit: StackFit.expand,
             children: [
               const ColoredBox(color: AppColors.surface),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Hero(
-                  tag: productHeroTag(product.id),
-                  child: CatalogImage(
-                    url: product.imageUrl,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+              Hero(
+                tag: productHeroTag(product.id),
+                child: CatalogImage(url: product.imageUrl, fit: BoxFit.cover),
               ),
               if (discount != null)
                 Align(
-                  alignment: Alignment.bottomLeft,
+                  alignment: Alignment.bottomRight,
                   child: _Discount(percent: discount),
                 ),
             ],

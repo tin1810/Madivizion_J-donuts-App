@@ -250,7 +250,7 @@
   "@homeTitle": {
     "description": "Short name of the home screen"
   },
-  "homeSeasonal": "Seasonal specials💕",
+  "homeSeasonal": "Seasonal specials",
   "@homeSeasonal": {
     "description": "Home row of seasonal products"
   },
@@ -341,7 +341,38 @@
   },
   "rewardsTitle": "J' Donuts Rewards",
   "@rewardsTitle": {
-    "description": "Title of the Reward tab until the rewards screen is built"
+    "description": "Title of the Rewards screen"
+  },
+  "rewardsBadge": "Rewards",
+  "@rewardsBadge": {
+    "description": "Label on the orange rewards count pill"
+  },
+  "rewardsTotalPoints": "Total points",
+  "@rewardsTotalPoints": {
+    "description": "Label inside the points ring"
+  },
+  "rewardsEarnTab": "Eat more earn more",
+  "@rewardsEarnTab": {
+    "description": "Selected tab for earn challenges"
+  },
+  "rewardsGiftTab": "Gift",
+  "@rewardsGiftTab": {
+    "description": "Tab for gift challenges"
+  },
+  "rewardsEarn": "EARN",
+  "@rewardsEarn": {
+    "description": "Button on a challenge card"
+  },
+  "rewardsPoints": "{points} pts",
+  "@rewardsPoints": {
+    "description": "Points awarded by a challenge",
+    "placeholders": {
+      "points": {"type": "int", "example": "100"}
+    }
+  },
+  "rewardsGiftEmpty": "Nothing here yet",
+  "@rewardsGiftEmpty": {
+    "description": "Shown when the Gift tab has no challenges"
   },
   "settingsTitle": "Settings",
   "@settingsTitle": {

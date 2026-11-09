@@ -38,6 +38,8 @@ class StoredBanners extends Table {
 
   TextColumn get title => text()();
 
+  TextColumn get badge => text().nullable()();
+
   TextColumn get imageUrl => text()();
 
   IntColumn get sortOrder => integer()();

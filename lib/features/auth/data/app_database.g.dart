@@ -971,6 +971,15 @@ class $StoredBannersTable extends StoredBanners
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _badgeMeta = const VerificationMeta('badge');
+  @override
+  late final GeneratedColumn<String> badge = GeneratedColumn<String>(
+    'badge',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -994,7 +1003,7 @@ class $StoredBannersTable extends StoredBanners
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, title, imageUrl, sortOrder];
+  List<GeneratedColumn> get $columns => [id, title, badge, imageUrl, sortOrder];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1019,6 +1028,12 @@ class $StoredBannersTable extends StoredBanners
       );
     } else if (isInserting) {
       context.missing(_titleMeta);
+    }
+    if (data.containsKey('badge')) {
+      context.handle(
+        _badgeMeta,
+        badge.isAcceptableOrUnknown(data['badge']!, _badgeMeta),
+      );
     }
     if (data.containsKey('image_url')) {
       context.handle(
@@ -1053,6 +1068,10 @@ class $StoredBannersTable extends StoredBanners
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      badge: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}badge'],
+      ),
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -1073,11 +1092,13 @@ class $StoredBannersTable extends StoredBanners
 class StoredBanner extends DataClass implements Insertable<StoredBanner> {
   final String id;
   final String title;
+  final String? badge;
   final String imageUrl;
   final int sortOrder;
   const StoredBanner({
     required this.id,
     required this.title,
+    this.badge,
     required this.imageUrl,
     required this.sortOrder,
   });
@@ -1086,6 +1107,9 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || badge != null) {
+      map['badge'] = Variable<String>(badge);
+    }
     map['image_url'] = Variable<String>(imageUrl);
     map['sort_order'] = Variable<int>(sortOrder);
     return map;
@@ -1095,6 +1119,9 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     return StoredBannersCompanion(
       id: Value(id),
       title: Value(title),
+      badge: badge == null && nullToAbsent
+          ? const Value.absent()
+          : Value(badge),
       imageUrl: Value(imageUrl),
       sortOrder: Value(sortOrder),
     );
@@ -1108,6 +1135,7 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     return StoredBanner(
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
+      badge: serializer.fromJson<String?>(json['badge']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
     );
@@ -1118,6 +1146,7 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
+      'badge': serializer.toJson<String?>(badge),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'sortOrder': serializer.toJson<int>(sortOrder),
     };
@@ -1126,11 +1155,13 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
   StoredBanner copyWith({
     String? id,
     String? title,
+    Value<String?> badge = const Value.absent(),
     String? imageUrl,
     int? sortOrder,
   }) => StoredBanner(
     id: id ?? this.id,
     title: title ?? this.title,
+    badge: badge.present ? badge.value : this.badge,
     imageUrl: imageUrl ?? this.imageUrl,
     sortOrder: sortOrder ?? this.sortOrder,
   );
@@ -1138,6 +1169,7 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     return StoredBanner(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
+      badge: data.badge.present ? data.badge.value : this.badge,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
     );
@@ -1148,6 +1180,7 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
     return (StringBuffer('StoredBanner(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('badge: $badge, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('sortOrder: $sortOrder')
           ..write(')'))
@@ -1155,13 +1188,14 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
   }
 
   @override
-  int get hashCode => Object.hash(id, title, imageUrl, sortOrder);
+  int get hashCode => Object.hash(id, title, badge, imageUrl, sortOrder);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StoredBanner &&
           other.id == this.id &&
           other.title == this.title &&
+          other.badge == this.badge &&
           other.imageUrl == this.imageUrl &&
           other.sortOrder == this.sortOrder);
 }
@@ -1169,12 +1203,14 @@ class StoredBanner extends DataClass implements Insertable<StoredBanner> {
 class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
   final Value<String> id;
   final Value<String> title;
+  final Value<String?> badge;
   final Value<String> imageUrl;
   final Value<int> sortOrder;
   final Value<int> rowid;
   const StoredBannersCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
+    this.badge = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.sortOrder = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1182,6 +1218,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
   StoredBannersCompanion.insert({
     required String id,
     required String title,
+    this.badge = const Value.absent(),
     required String imageUrl,
     required int sortOrder,
     this.rowid = const Value.absent(),
@@ -1192,6 +1229,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
   static Insertable<StoredBanner> custom({
     Expression<String>? id,
     Expression<String>? title,
+    Expression<String>? badge,
     Expression<String>? imageUrl,
     Expression<int>? sortOrder,
     Expression<int>? rowid,
@@ -1199,6 +1237,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
+      if (badge != null) 'badge': badge,
       if (imageUrl != null) 'image_url': imageUrl,
       if (sortOrder != null) 'sort_order': sortOrder,
       if (rowid != null) 'rowid': rowid,
@@ -1208,6 +1247,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
   StoredBannersCompanion copyWith({
     Value<String>? id,
     Value<String>? title,
+    Value<String?>? badge,
     Value<String>? imageUrl,
     Value<int>? sortOrder,
     Value<int>? rowid,
@@ -1215,6 +1255,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
     return StoredBannersCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
+      badge: badge ?? this.badge,
       imageUrl: imageUrl ?? this.imageUrl,
       sortOrder: sortOrder ?? this.sortOrder,
       rowid: rowid ?? this.rowid,
@@ -1229,6 +1270,9 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
+    }
+    if (badge.present) {
+      map['badge'] = Variable<String>(badge.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -1247,6 +1291,7 @@ class StoredBannersCompanion extends UpdateCompanion<StoredBanner> {
     return (StringBuffer('StoredBannersCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('badge: $badge, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('rowid: $rowid')
@@ -3451,6 +3496,7 @@ typedef $$StoredBannersTableCreateCompanionBuilder =
     StoredBannersCompanion Function({
       required String id,
       required String title,
+      Value<String?> badge,
       required String imageUrl,
       required int sortOrder,
       Value<int> rowid,
@@ -3459,6 +3505,7 @@ typedef $$StoredBannersTableUpdateCompanionBuilder =
     StoredBannersCompanion Function({
       Value<String> id,
       Value<String> title,
+      Value<String?> badge,
       Value<String> imageUrl,
       Value<int> sortOrder,
       Value<int> rowid,
@@ -3480,6 +3527,11 @@ class $$StoredBannersTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get badge => $composableBuilder(
+    column: $table.badge,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3513,6 +3565,11 @@ class $$StoredBannersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get badge => $composableBuilder(
+    column: $table.badge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -3538,6 +3595,9 @@ class $$StoredBannersTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get badge =>
+      $composableBuilder(column: $table.badge, builder: (column) => column);
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -3579,12 +3639,14 @@ class $$StoredBannersTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> badge = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => StoredBannersCompanion(
                 id: id,
                 title: title,
+                badge: badge,
                 imageUrl: imageUrl,
                 sortOrder: sortOrder,
                 rowid: rowid,
@@ -3593,12 +3655,14 @@ class $$StoredBannersTableTableManager
               ({
                 required String id,
                 required String title,
+                Value<String?> badge = const Value.absent(),
                 required String imageUrl,
                 required int sortOrder,
                 Value<int> rowid = const Value.absent(),
               }) => StoredBannersCompanion.insert(
                 id: id,
                 title: title,
+                badge: badge,
                 imageUrl: imageUrl,
                 sortOrder: sortOrder,
                 rowid: rowid,

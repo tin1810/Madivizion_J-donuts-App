@@ -66,11 +66,15 @@ class AppNavBar extends StatelessWidget {
 
   List<_NavItem> _items(AppLocalizations l10n) {
     return [
-      _NavItem(Icons.home_outlined, l10n.navHome, 'nav-home'),
-      _NavItem(Icons.workspace_premium_outlined, l10n.navReward, 'nav-reward'),
-      _NavItem(Icons.adjust, l10n.navNearby, 'nav-nearby'),
-      _NavItem(Icons.wallet_outlined, l10n.navWallet, 'nav-wallet'),
-      _NavItem(Icons.settings_outlined, l10n.settingsTitle, 'nav-settings'),
+      _NavItem(l10n.navHome, 'nav-home', asset: 'assets/nav/home.png'),
+      _NavItem(l10n.navReward, 'nav-reward', asset: 'assets/nav/reward.png'),
+      _NavItem(l10n.navNearby, 'nav-nearby', icon: Icons.adjust),
+      _NavItem(l10n.navWallet, 'nav-wallet', asset: 'assets/nav/wallet.png'),
+      _NavItem(
+        l10n.settingsTitle,
+        'nav-settings',
+        asset: 'assets/nav/settings.png',
+      ),
     ];
   }
 }
@@ -80,9 +84,10 @@ const _iconSize = 22.0;
 const _pillHeight = 44.0;
 
 class _NavItem {
-  const _NavItem(this.icon, this.label, this.keyName);
+  const _NavItem(this.label, this.keyName, {this.icon, this.asset});
 
-  final IconData icon;
+  final IconData? icon;
+  final String? asset;
   final String label;
   final String keyName;
 }
@@ -138,13 +143,29 @@ double _pillWidth(String label, TextStyle style, TextScaler scaler) {
   return AppSpacing.sm * 2 + _iconSize + AppSpacing.xxs + painter.width;
 }
 
-class _NavIcon extends StatelessWidget {
-  const _NavIcon(this.icon);
+Widget _assetIcon(String asset) {
+  return ColorFiltered(
+    colorFilter: const ColorFilter.mode(AppColors.onPrimary, BlendMode.srcIn),
+    child: Image.asset(
+      asset,
+      width: _iconSize,
+      height: _iconSize,
+      fit: BoxFit.contain,
+    ),
+  );
+}
 
-  final IconData icon;
+class _NavIcon extends StatelessWidget {
+  const _NavIcon(this.item);
+
+  final _NavItem item;
 
   @override
   Widget build(BuildContext context) {
-    return Icon(icon, color: AppColors.onPrimary, size: 22);
+    final asset = item.asset;
+    final icon = item.icon;
+    if (asset != null) return _assetIcon(asset);
+    if (icon == null) return const SizedBox.square(dimension: _iconSize);
+    return Icon(icon, color: AppColors.onPrimary, size: _iconSize);
   }
 }

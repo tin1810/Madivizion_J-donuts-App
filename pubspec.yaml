@@ -46,6 +46,7 @@ dependencies:
   path: ^1.9.1
   flutter_secure_storage: ^11.2.0
   connectivity_plus: ^6.1.0
+  lottie: ^3.7.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,8 @@ flutter:
   assets:
     - assets/seed/catalog.json
     - assets/catalog/
+    - assets/rewards/
+    - assets/nav/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

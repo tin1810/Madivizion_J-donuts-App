@@ -158,8 +158,10 @@ class _NavMotionState extends State<_NavMotion>
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: AppColors.navPink,
-                borderRadius: const BorderRadius.all(Radius.circular(AppRadius.pill)),
-               border:  Border.all(color: AppColors.border, width: 1)
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(AppRadius.pill),
+                ),
+                border: Border.all(color: AppColors.border, width: 1),
               ),
             ),
           ),
@@ -214,7 +216,7 @@ class _NavSlot extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _NavIcon(item.icon),
+                _NavIcon(item),
                 if (labelFits) ...[
                   const SizedBox(width: AppSpacing.xxs),
                   SizedBox(

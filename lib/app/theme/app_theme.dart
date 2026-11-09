@@ -21,7 +21,22 @@ abstract final class AppTheme {
 abstract final class AppColors {
   static const Color background = Color(0xFFFFF0F4);
   static const Color canvas = Color(0xFFECEEF0);
-  static const Color headerWash = Color(0xFFB8E3F1);
+  static const Color headerWash = Color(0xFFFFE6D4);
+  static const Color headerShape = Color(0xFFF6CDB8);
+  static const Color headerStar = Color(0xFFF0D7A8);
+  static const Color headerBell = Color(0xFFF5994B);
+  static const Color rewardRing = Color(0xFFFF4FA0);
+  static const Color ringTrack = Color(0xFFE4E7EB);
+  static const Color tierSilver = Color(0xFFC8CCD2);
+  static const Color tierGold = Color(0xFFF2D36B);
+  static const Color tierPlatinum = Color(0xFFB7D6EA);
+  static const Color coffeeFoam = Color(0xFFFFF6EA);
+  static const Color coffeeMilk = Color(0xFFE8C09A);
+  static const Color coffeeBrew = Color(0xFFC48455);
+  static const Color bannerLead = Color(0xFF5C4DFF);
+  static const Color bannerSecond = Color(0xFF2EC5E0);
+  static const Color bannerThird = Color(0xFFF15A9A);
+  static const Color bannerFourth = Color(0xFFFF8A3D);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color primary = Color(0xFF20D0E8);
   static const Color nav = Color(0xFF33C4E9);

@@ -2,13 +2,17 @@ import 'package:drift/drift.dart';
 import 'package:madivizion_jdonuts_app/features/auth/data/app_database.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seed.dart';
 
-/// Copies the bundled catalog into Drift once. Later launches keep the rows.
+/// Copies the bundled catalog into Drift once.
+///
+/// Later launches keep products and the member, and refresh the slideshow
+/// from the bundled banners.
 Future<void> seedCatalog(AppDatabase database, String raw) async {
+  final seed = CatalogSeed.parse(raw);
   final existing = await database.select(database.storedMembers).get();
   if (existing.isNotEmpty) {
+    await _replaceBanners(database, seed);
     return;
   }
-  final seed = CatalogSeed.parse(raw);
   await database.transaction(() => _write(database, seed));
 }
 
@@ -61,12 +65,22 @@ StoredTiersCompanion _tier(SeedTier tier) {
   );
 }
 
+Future<void> _replaceBanners(AppDatabase database, CatalogSeed seed) async {
+  await database.transaction(() async {
+    await database.delete(database.storedBanners).go();
+    await database.batch((batch) {
+      batch.insertAll(database.storedBanners, seed.banners.map(_banner));
+    });
+  });
+}
+
 StoredBannersCompanion _banner(SeedBanner banner) {
   return StoredBannersCompanion.insert(
     id: banner.id,
     title: banner.title,
     imageUrl: banner.imageUrl,
     sortOrder: banner.sortOrder,
+    badge: Value(banner.badge),
   );
 }
 

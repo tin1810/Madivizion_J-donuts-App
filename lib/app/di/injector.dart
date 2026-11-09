@@ -32,6 +32,10 @@ import 'package:madivizion_jdonuts_app/features/home/data/bundled_catalog_source
 import 'package:madivizion_jdonuts_app/features/home/data/drift_catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/data/memory_catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/data/drift_rewards_repository.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/data/memory_rewards_repository.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/domain/load_rewards.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/domain/rewards_repository.dart';
 
 /// Composition root. Widgets resolve dependencies from here.
 final GetIt injector = GetIt.instance;
@@ -53,6 +57,7 @@ Future<void> configureDependencies({
   _registerSession();
   _registerLink(linkWatch ?? const FixedLinkWatch(LinkPhase.online));
   _registerCatalog(catalog, production: authRepository == null);
+  _registerRewards(production: authRepository == null);
   if (authRepository == null) {
     await _registerProductionImages();
     return;
@@ -80,6 +85,15 @@ void _registerCatalog(CatalogRepository? catalog, {required bool production}) {
       source: const BundledCatalogSource(),
     ),
   );
+}
+
+void _registerRewards({required bool production}) {
+  final RewardsRepository repository = production
+      ? DriftRewardsRepository(injector<AppDatabase>())
+      : MemoryRewardsRepository();
+  injector
+    ..registerSingleton<RewardsRepository>(repository)
+    ..registerSingleton<LoadRewards>(LoadRewards(repository));
 }
 
 void _registerLink(LinkWatch watch) {
