@@ -1324,6 +1324,26 @@ class $StoredShopsTable extends StoredShops
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -1347,7 +1367,14 @@ class $StoredShopsTable extends StoredShops
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name, imageUrl, sortOrder];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    address,
+    phone,
+    imageUrl,
+    sortOrder,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1372,6 +1399,22 @@ class $StoredShopsTable extends StoredShops
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_addressMeta);
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
     }
     if (data.containsKey('image_url')) {
       context.handle(
@@ -1406,6 +1449,14 @@ class $StoredShopsTable extends StoredShops
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      )!,
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -1426,11 +1477,15 @@ class $StoredShopsTable extends StoredShops
 class StoredShop extends DataClass implements Insertable<StoredShop> {
   final String id;
   final String name;
+  final String address;
+  final String phone;
   final String imageUrl;
   final int sortOrder;
   const StoredShop({
     required this.id,
     required this.name,
+    required this.address,
+    required this.phone,
     required this.imageUrl,
     required this.sortOrder,
   });
@@ -1439,6 +1494,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    map['address'] = Variable<String>(address);
+    map['phone'] = Variable<String>(phone);
     map['image_url'] = Variable<String>(imageUrl);
     map['sort_order'] = Variable<int>(sortOrder);
     return map;
@@ -1448,6 +1505,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     return StoredShopsCompanion(
       id: Value(id),
       name: Value(name),
+      address: Value(address),
+      phone: Value(phone),
       imageUrl: Value(imageUrl),
       sortOrder: Value(sortOrder),
     );
@@ -1461,6 +1520,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     return StoredShop(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      address: serializer.fromJson<String>(json['address']),
+      phone: serializer.fromJson<String>(json['phone']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
     );
@@ -1471,6 +1532,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'address': serializer.toJson<String>(address),
+      'phone': serializer.toJson<String>(phone),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'sortOrder': serializer.toJson<int>(sortOrder),
     };
@@ -1479,11 +1542,15 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
   StoredShop copyWith({
     String? id,
     String? name,
+    String? address,
+    String? phone,
     String? imageUrl,
     int? sortOrder,
   }) => StoredShop(
     id: id ?? this.id,
     name: name ?? this.name,
+    address: address ?? this.address,
+    phone: phone ?? this.phone,
     imageUrl: imageUrl ?? this.imageUrl,
     sortOrder: sortOrder ?? this.sortOrder,
   );
@@ -1491,6 +1558,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     return StoredShop(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      address: data.address.present ? data.address.value : this.address,
+      phone: data.phone.present ? data.phone.value : this.phone,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
     );
@@ -1501,6 +1570,8 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
     return (StringBuffer('StoredShop(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('address: $address, ')
+          ..write('phone: $phone, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('sortOrder: $sortOrder')
           ..write(')'))
@@ -1508,13 +1579,16 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
   }
 
   @override
-  int get hashCode => Object.hash(id, name, imageUrl, sortOrder);
+  int get hashCode =>
+      Object.hash(id, name, address, phone, imageUrl, sortOrder);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StoredShop &&
           other.id == this.id &&
           other.name == this.name &&
+          other.address == this.address &&
+          other.phone == this.phone &&
           other.imageUrl == this.imageUrl &&
           other.sortOrder == this.sortOrder);
 }
@@ -1522,12 +1596,16 @@ class StoredShop extends DataClass implements Insertable<StoredShop> {
 class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String> address;
+  final Value<String> phone;
   final Value<String> imageUrl;
   final Value<int> sortOrder;
   final Value<int> rowid;
   const StoredShopsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.address = const Value.absent(),
+    this.phone = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.sortOrder = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1535,16 +1613,22 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
   StoredShopsCompanion.insert({
     required String id,
     required String name,
+    required String address,
+    required String phone,
     required String imageUrl,
     required int sortOrder,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
+       address = Value(address),
+       phone = Value(phone),
        imageUrl = Value(imageUrl),
        sortOrder = Value(sortOrder);
   static Insertable<StoredShop> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? address,
+    Expression<String>? phone,
     Expression<String>? imageUrl,
     Expression<int>? sortOrder,
     Expression<int>? rowid,
@@ -1552,6 +1636,8 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (address != null) 'address': address,
+      if (phone != null) 'phone': phone,
       if (imageUrl != null) 'image_url': imageUrl,
       if (sortOrder != null) 'sort_order': sortOrder,
       if (rowid != null) 'rowid': rowid,
@@ -1561,6 +1647,8 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
   StoredShopsCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
+    Value<String>? address,
+    Value<String>? phone,
     Value<String>? imageUrl,
     Value<int>? sortOrder,
     Value<int>? rowid,
@@ -1568,6 +1656,8 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
     return StoredShopsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      address: address ?? this.address,
+      phone: phone ?? this.phone,
       imageUrl: imageUrl ?? this.imageUrl,
       sortOrder: sortOrder ?? this.sortOrder,
       rowid: rowid ?? this.rowid,
@@ -1582,6 +1672,12 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -1600,6 +1696,8 @@ class StoredShopsCompanion extends UpdateCompanion<StoredShop> {
     return (StringBuffer('StoredShopsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('address: $address, ')
+          ..write('phone: $phone, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('rowid: $rowid')
@@ -3696,6 +3794,8 @@ typedef $$StoredShopsTableCreateCompanionBuilder =
     StoredShopsCompanion Function({
       required String id,
       required String name,
+      required String address,
+      required String phone,
       required String imageUrl,
       required int sortOrder,
       Value<int> rowid,
@@ -3704,6 +3804,8 @@ typedef $$StoredShopsTableUpdateCompanionBuilder =
     StoredShopsCompanion Function({
       Value<String> id,
       Value<String> name,
+      Value<String> address,
+      Value<String> phone,
       Value<String> imageUrl,
       Value<int> sortOrder,
       Value<int> rowid,
@@ -3725,6 +3827,16 @@ class $$StoredShopsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3758,6 +3870,16 @@ class $$StoredShopsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -3783,6 +3905,12 @@ class $$StoredShopsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -3824,12 +3952,16 @@ class $$StoredShopsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String> address = const Value.absent(),
+                Value<String> phone = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => StoredShopsCompanion(
                 id: id,
                 name: name,
+                address: address,
+                phone: phone,
                 imageUrl: imageUrl,
                 sortOrder: sortOrder,
                 rowid: rowid,
@@ -3838,12 +3970,16 @@ class $$StoredShopsTableTableManager
               ({
                 required String id,
                 required String name,
+                required String address,
+                required String phone,
                 required String imageUrl,
                 required int sortOrder,
                 Value<int> rowid = const Value.absent(),
               }) => StoredShopsCompanion.insert(
                 id: id,
                 name: name,
+                address: address,
+                phone: phone,
                 imageUrl: imageUrl,
                 sortOrder: sortOrder,
                 rowid: rowid,

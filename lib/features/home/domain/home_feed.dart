@@ -61,11 +61,15 @@ class HomeShop {
   const HomeShop({
     required this.id,
     required this.name,
+    required this.address,
+    required this.phone,
     required this.imageUrl,
   });
 
   final String id;
   final String name;
+  final String address;
+  final String phone;
   final String imageUrl;
 }
 

@@ -7,6 +7,9 @@ import 'package:madivizion_jdonuts_app/features/auth/domain/user_account.dart';
 abstract interface class AuthRepository {
   Future<Result<UserAccount?>> findByPhone(String phoneE164);
 
+  /// The account for the saved session, without the fake sign-in wait.
+  Future<Result<UserAccount?>> signedInAccount();
+
   Future<Result<UserAccount>> register(UserAccount account);
 
   Future<Result<Unit>> saveSession(String userId);

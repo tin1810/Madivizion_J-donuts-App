@@ -170,6 +170,8 @@ class SeedShop {
   const SeedShop({
     required this.id,
     required this.name,
+    required this.address,
+    required this.phone,
     required this.imageUrl,
     required this.sortOrder,
   });
@@ -178,6 +180,8 @@ class SeedShop {
     return SeedShop(
       id: _text(json, 'id'),
       name: _text(json, 'name'),
+      address: _text(json, 'address'),
+      phone: _text(json, 'phone'),
       imageUrl: _text(json, 'imageUrl'),
       sortOrder: _count(json, 'sortOrder'),
     );
@@ -185,6 +189,8 @@ class SeedShop {
 
   final String id;
   final String name;
+  final String address;
+  final String phone;
   final String imageUrl;
   final int sortOrder;
 }

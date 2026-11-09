@@ -277,7 +277,7 @@
       "tier": {"type": "String", "example": "Gold"}
     }
   },
-  "homeShops": "There are {count} J'Donut shops",
+  "homeShops": "There are {count} J'Donut shops Near You ",
   "@homeShops": {
     "description": "Shop strip heading, using the number of shops in the database",
     "placeholders": {
@@ -338,6 +338,10 @@
   "navWallet": "Wallet",
   "@navWallet": {
     "description": "Placeholder title for the wallet tab"
+  },
+  "comingSoon": "Coming Soon",
+  "@comingSoon": {
+    "description": "Animated message on Nearby and Wallet until those screens exist"
   },
   "rewardsTitle": "J' Donuts Rewards",
   "@rewardsTitle": {

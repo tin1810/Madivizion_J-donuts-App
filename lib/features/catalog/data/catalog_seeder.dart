@@ -4,13 +4,15 @@ import 'package:madivizion_jdonuts_app/features/catalog/data/catalog_seed.dart';
 
 /// Copies the bundled catalog into Drift once.
 ///
-/// Later launches keep products and the member, and refresh the slideshow
-/// from the bundled banners.
+/// Later launches keep the member, and refresh products and the slideshow
+/// from the bundled catalog.
 Future<void> seedCatalog(AppDatabase database, String raw) async {
   final seed = CatalogSeed.parse(raw);
   final existing = await database.select(database.storedMembers).get();
   if (existing.isNotEmpty) {
     await _replaceBanners(database, seed);
+    await _replaceProducts(database, seed);
+    await _replaceShops(database, seed);
     return;
   }
   await database.transaction(() => _write(database, seed));
@@ -65,6 +67,15 @@ StoredTiersCompanion _tier(SeedTier tier) {
   );
 }
 
+Future<void> _replaceProducts(AppDatabase database, CatalogSeed seed) async {
+  await database.transaction(() async {
+    await database.delete(database.storedProducts).go();
+    await database.batch((batch) {
+      batch.insertAll(database.storedProducts, seed.products.map(_product));
+    });
+  });
+}
+
 Future<void> _replaceBanners(AppDatabase database, CatalogSeed seed) async {
   await database.transaction(() async {
     await database.delete(database.storedBanners).go();
@@ -99,10 +110,21 @@ StoredProductsCompanion _product(SeedProduct product) {
   );
 }
 
+Future<void> _replaceShops(AppDatabase database, CatalogSeed seed) async {
+  await database.transaction(() async {
+    await database.delete(database.storedShops).go();
+    await database.batch((batch) {
+      batch.insertAll(database.storedShops, seed.shops.map(_shop));
+    });
+  });
+}
+
 StoredShopsCompanion _shop(SeedShop shop) {
   return StoredShopsCompanion.insert(
     id: shop.id,
     name: shop.name,
+    address: shop.address,
+    phone: shop.phone,
     imageUrl: shop.imageUrl,
     sortOrder: shop.sortOrder,
   );

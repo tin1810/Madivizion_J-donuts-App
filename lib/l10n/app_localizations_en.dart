@@ -238,7 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String homeShops(int count) {
-    return 'There are $count J\'Donut shops';
+    return 'There are $count J\'Donut shops Near You ';
   }
 
   @override
@@ -281,6 +281,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navWallet => 'Wallet';
+
+  @override
+  String get comingSoon => 'Coming Soon';
 
   @override
   String get rewardsTitle => 'J\' Donuts Rewards';

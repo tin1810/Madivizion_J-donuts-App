@@ -7,10 +7,16 @@ import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({required this.member, required this.banners, super.key});
+  const HomeHeader({
+    required this.member,
+    required this.banners,
+    this.registeredName,
+    super.key,
+  });
 
   final Result<MemberProfile> member;
   final Widget banners;
+  final String? registeredName;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,7 @@ class HomeHeader extends StatelessWidget {
               ),
               child: profile == null
                   ? Text(l10n.homeMemberError, style: _error(context))
-                  : _Loaded(profile: profile),
+                  : _Loaded(profile: profile, registeredName: registeredName),
             ),
           ),
           Positioned(
@@ -69,9 +75,10 @@ const _bellIcon = 21.0;
 const _badgeSize = 30.0;
 
 class _Loaded extends StatelessWidget {
-  const _Loaded({required this.profile});
+  const _Loaded({required this.profile, this.registeredName});
 
   final MemberProfile profile;
+  final String? registeredName;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +97,12 @@ class _Loaded extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: _Identity(profile: profile)),
+            Expanded(
+              child: _Identity(
+                profile: profile,
+                name: registeredName ?? profile.name,
+              ),
+            ),
             const SizedBox(width: AppSpacing.sm),
             _Bell(count: profile.notificationCount),
           ],
@@ -103,9 +115,10 @@ class _Loaded extends StatelessWidget {
 }
 
 class _Identity extends StatelessWidget {
-  const _Identity({required this.profile});
+  const _Identity({required this.profile, required this.name});
 
   final MemberProfile profile;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +126,7 @@ class _Identity extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(profile.name, style: _name(context)),
+        Text(name, style: _name(context)),
         Text(
           l10n.homeTierMember(displayTier(profile.tier)),
           style: _role(context),
@@ -177,10 +190,13 @@ class _Bell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.headerBell,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.lg), bottomLeft: Radius.circular(AppRadius.lg)),
-     border: Border.all(color: AppColors.border, width: 1.0),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(AppRadius.lg),
+          bottomLeft: Radius.circular(AppRadius.lg),
+        ),
+        border: Border.all(color: AppColors.border, width: 1.0),
       ),
       child: SizedBox(
         height: _badgeSize,

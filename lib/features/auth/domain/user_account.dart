@@ -24,3 +24,13 @@ class UserAccount {
   @override
   int get hashCode => Object.hash(phoneE164, firstName, lastName, birthDate);
 }
+
+/// First name, plus the last name when the person typed one.
+String accountDisplayName(UserAccount account) {
+  final first = account.firstName.trim();
+  final last = account.lastName.trim();
+  if (last.isEmpty) {
+    return first;
+  }
+  return '$first $last';
+}

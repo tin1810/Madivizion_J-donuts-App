@@ -8,36 +8,54 @@ import 'package:madivizion_jdonuts_app/features/catalog/presentation/catalog_ima
 import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
+const _cardWidth = 168.0;
+const _squareArt = 168.0;
+const _wideArt = 118.0;
+const _captionSpace = 48.0;
+
 class HomeProductSection extends StatelessWidget {
   const HomeProductSection({
     required this.title,
     required this.products,
+    this.wideFrame = false,
+    this.photoFrame = false,
     super.key,
   });
 
   final String title;
   final Result<List<HomeProduct>> products;
 
+  /// Seasonal photos sit in a landscape frame. Other rows stay square.
+  final bool wideFrame;
+
+  /// Popular photos sit centered on a white square, with space around them.
+  final bool photoFrame;
+
   @override
   Widget build(BuildContext context) {
+    final art = wideFrame ? _wideArt : _squareArt;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Heading(title: title),
         const SizedBox(height: AppSpacing.sm),
-        SizedBox(height: 216, child: _body(context)),
+        SizedBox(height: art + _captionSpace, child: _body(context, art)),
       ],
     );
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body(BuildContext context, double artHeight) {
     final l10n = AppLocalizations.of(context);
     return switch (products) {
       Failure<List<HomeProduct>>() => _Note(text: l10n.homeSectionError),
       Success<List<HomeProduct>>(value: []) => _Note(
         text: l10n.homeSectionEmpty,
       ),
-      Success<List<HomeProduct>>(:final value) => _Cards(products: value),
+      Success<List<HomeProduct>>(:final value) => _Cards(
+        products: value,
+        artHeight: artHeight,
+        photoFrame: photoFrame,
+      ),
     };
   }
 }
@@ -109,9 +127,15 @@ class _Note extends StatelessWidget {
 }
 
 class _Cards extends StatelessWidget {
-  const _Cards({required this.products});
+  const _Cards({
+    required this.products,
+    required this.artHeight,
+    required this.photoFrame,
+  });
 
   final List<HomeProduct> products;
+  final double artHeight;
+  final bool photoFrame;
 
   @override
   Widget build(BuildContext context) {
@@ -120,26 +144,38 @@ class _Cards extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       itemCount: products.length,
       separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-      itemBuilder: (context, index) => _ProductCard(product: products[index]),
+      itemBuilder: (context, index) {
+        return _ProductCard(
+          product: products[index],
+          artHeight: artHeight,
+          photoFrame: photoFrame,
+        );
+      },
     );
   }
 }
 
 class _ProductCard extends StatelessWidget {
-  const _ProductCard({required this.product});
+  const _ProductCard({
+    required this.product,
+    required this.artHeight,
+    required this.photoFrame,
+  });
 
   final HomeProduct product;
+  final double artHeight;
+  final bool photoFrame;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 168,
+      width: _cardWidth,
       child: InkWell(
         onTap: () => context.push(AppRoutes.productLocation(product.id)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Art(product: product),
+            _Art(product: product, height: artHeight, photoFrame: photoFrame),
             const SizedBox(height: AppSpacing.xs),
             Text(
               product.name,
@@ -158,9 +194,15 @@ class _ProductCard extends StatelessWidget {
 }
 
 class _Art extends StatelessWidget {
-  const _Art({required this.product});
+  const _Art({
+    required this.product,
+    required this.height,
+    required this.photoFrame,
+  });
 
   final HomeProduct product;
+  final double height;
+  final bool photoFrame;
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +221,7 @@ class _Art extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(AppRadius.lg)),
         child: SizedBox(
-          height: 168,
+          height: height,
           width: double.infinity,
           child: Stack(
             fit: StackFit.expand,
@@ -187,7 +229,13 @@ class _Art extends StatelessWidget {
               const ColoredBox(color: AppColors.surface),
               Hero(
                 tag: productHeroTag(product.id),
-                child: CatalogImage(url: product.imageUrl, fit: BoxFit.cover),
+                child: Padding(
+                  padding: EdgeInsets.all(photoFrame ? AppSpacing.md : 0),
+                  child: CatalogImage(
+                    url: product.imageUrl,
+                    fit: photoFrame ? BoxFit.contain : BoxFit.cover,
+                  ),
+                ),
               ),
               if (discount != null)
                 Align(

@@ -32,24 +32,27 @@ class _Loaded extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _Banner(text: l10n.homeShops(shops.length)),
-        const SizedBox(height: AppSpacing.md),
-        const _NearYou(),
-        const SizedBox(height: AppSpacing.sm),
-        SizedBox(
-          height: 220,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            itemCount: shops.length,
-            separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-            itemBuilder: (context, index) => _ShopCard(shop: shops[index]),
+    return ColoredBox(
+      color: AppColors.primary,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _Banner(text: l10n.homeShops(shops.length)),
+         
+          const SizedBox(height: AppSpacing.sm),
+          SizedBox(
+            height: _cardHeight,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              itemCount: shops.length,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
+              itemBuilder: (context, index) => _ShopCard(shop: shops[index]),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: AppSpacing.md),
+        ],
+      ),
     );
   }
 }
@@ -101,19 +104,24 @@ class _NearYou extends StatelessWidget {
   }
 
   TextStyle? _title(BuildContext context) {
-    return Theme.of(
-      context,
-    ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700);
+    return Theme.of(context).textTheme.bodyLarge?.copyWith(
+      color: AppColors.onPrimary,
+      fontWeight: FontWeight.w700,
+    );
   }
 
   TextStyle? _action(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: AppColors.primary,
+      color: AppColors.onPrimary,
       fontWeight: FontWeight.w700,
       letterSpacing: AppTextTracking.button,
     );
   }
 }
+
+const _cardWidth = 168.0;
+const _cardHeight = 216.0;
+const _photoHeight = 96.0;
 
 class _ShopCard extends StatelessWidget {
   const _ShopCard({required this.shop});
@@ -124,7 +132,8 @@ class _ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return SizedBox(
-      width: 220,
+      width: _cardWidth,
+      height: _cardHeight,
       child: DecoratedBox(
         decoration: const BoxDecoration(
           color: AppColors.surface,
@@ -138,18 +147,34 @@ class _ShopCard extends StatelessWidget {
                 top: Radius.circular(AppRadius.md),
               ),
               child: SizedBox(
-                height: 112,
+                height: _photoHeight,
                 width: double.infinity,
                 child: CatalogImage(url: shop.imageUrl),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.xs,
+                AppSpacing.xs,
+                AppSpacing.xs,
+                AppSpacing.sm,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(shop.name, style: _name(context)),
-                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    shop.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: _name(context),
+                  ),
+                  Text(
+                    shop.address,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: _detail(context),
+                  ),
+                  const SizedBox(height: AppSpacing.xxs),
                   Text(l10n.homeOrderOnline, style: _action(context)),
                 ],
               ),
@@ -164,6 +189,14 @@ class _ShopCard extends StatelessWidget {
     return Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: AppColors.textPrimary,
       fontWeight: FontWeight.w700,
+    );
+  }
+
+  TextStyle? _detail(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.textSecondary,
+      fontSize: AppTextSize.caption,
+      fontWeight: FontWeight.w500,
     );
   }
 

@@ -6,6 +6,8 @@ import 'package:madivizion_jdonuts_app/app/motion/entrance.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/core/network/link_read.dart';
 import 'package:madivizion_jdonuts_app/core/result/result.dart';
+import 'package:madivizion_jdonuts_app/features/auth/domain/auth_repository.dart';
+import 'package:madivizion_jdonuts_app/features/auth/domain/user_account.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/home_feed.dart';
 import 'package:madivizion_jdonuts_app/features/home/presentation/banner_carousel.dart';
@@ -26,13 +28,47 @@ class HomePage extends StatelessWidget {
         catalog: injector<CatalogRepository>(),
         link: injector<LinkRead>(),
       )..add(const HomeStarted()),
-      child: const HomeView(),
+      child: const _NamedHome(),
     );
   }
 }
 
+class _NamedHome extends StatefulWidget {
+  const _NamedHome();
+
+  @override
+  State<_NamedHome> createState() => _NamedHomeState();
+}
+
+class _NamedHomeState extends State<_NamedHome> {
+  String? _registeredName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadName();
+  }
+
+  Future<void> _loadName() async {
+    final result = await injector<AuthRepository>().signedInAccount();
+    if (!mounted) {
+      return;
+    }
+    if (result case Success<UserAccount?>(value: final account?)) {
+      setState(() => _registeredName = accountDisplayName(account));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeView(registeredName: _registeredName);
+  }
+}
+
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({this.registeredName, super.key});
+
+  final String? registeredName;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +77,10 @@ class HomeView extends StatelessWidget {
         return switch (state) {
           HomeLoading() => const HomeSkeleton(),
           HomeFailure() => const _Failure(),
-          HomeReady(:final feed) => _Ready(feed: feed),
+          HomeReady(:final feed) => _Ready(
+            feed: feed,
+            registeredName: registeredName,
+          ),
         };
       },
     );
@@ -70,9 +109,10 @@ class _Failure extends StatelessWidget {
 }
 
 class _Ready extends StatelessWidget {
-  const _Ready({required this.feed});
+  const _Ready({required this.feed, this.registeredName});
 
   final HomeFeed feed;
+  final String? registeredName;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +121,11 @@ class _Ready extends StatelessWidget {
       onRefresh: () => _refresh(context),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [SliverToBoxAdapter(child: _Body(feed: feed))],
+        slivers: [
+          SliverToBoxAdapter(
+            child: _Body(feed: feed, registeredName: registeredName),
+          ),
+        ],
       ),
     );
   }
@@ -95,9 +139,10 @@ class _Ready extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.feed});
+  const _Body({required this.feed, this.registeredName});
 
   final HomeFeed feed;
+  final String? registeredName;
 
   @override
   State<_Body> createState() => _BodyState();
@@ -153,6 +198,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           ),
           child: HomeHeader(
             member: widget.feed.member,
+            registeredName: widget.registeredName,
             banners: Entrance(
               animation: _entrance,
               start: 0.08,
@@ -161,12 +207,13 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
             ),
           ),
         ),
-        SizedBox(height: 50),
+        SizedBox(height: 25),
         _block(
           1,
           HomeProductSection(
             title: l10n.homeSeasonal,
             products: widget.feed.seasonal,
+            wideFrame: true,
           ),
         ),
         _block(
@@ -174,6 +221,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           HomeProductSection(
             title: l10n.homePopular,
             products: widget.feed.popular,
+            photoFrame: true,
           ),
         ),
         _block(

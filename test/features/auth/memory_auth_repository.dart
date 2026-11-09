@@ -29,6 +29,15 @@ class MemoryAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<Result<UserAccount?>> signedInAccount() async {
+    final phone = _session;
+    if (phone == null) {
+      return const Success(null);
+    }
+    return Success(_users[phone]);
+  }
+
+  @override
   Future<Result<Unit>> saveSession(String userId) async {
     _session = userId;
     return const Success(Unit.instance);

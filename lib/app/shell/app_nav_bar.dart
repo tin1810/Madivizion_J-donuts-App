@@ -74,6 +74,7 @@ class AppNavBar extends StatelessWidget {
         l10n.settingsTitle,
         'nav-settings',
         asset: 'assets/nav/settings.png',
+        size: _settingsIconSize,
       ),
     ];
   }
@@ -81,15 +82,23 @@ class AppNavBar extends StatelessWidget {
 
 const _barHeight = 64.0;
 const _iconSize = 22.0;
+const _settingsIconSize = 30.0;
 const _pillHeight = 44.0;
 
 class _NavItem {
-  const _NavItem(this.label, this.keyName, {this.icon, this.asset});
+  const _NavItem(
+    this.label,
+    this.keyName, {
+    this.icon,
+    this.asset,
+    this.size = _iconSize,
+  });
 
   final IconData? icon;
   final String? asset;
   final String label;
   final String keyName;
+  final double size;
 }
 
 class _NavStack extends StatelessWidget {
@@ -143,15 +152,10 @@ double _pillWidth(String label, TextStyle style, TextScaler scaler) {
   return AppSpacing.sm * 2 + _iconSize + AppSpacing.xxs + painter.width;
 }
 
-Widget _assetIcon(String asset) {
+Widget _assetIcon(String asset, double size) {
   return ColorFiltered(
     colorFilter: const ColorFilter.mode(AppColors.onPrimary, BlendMode.srcIn),
-    child: Image.asset(
-      asset,
-      width: _iconSize,
-      height: _iconSize,
-      fit: BoxFit.contain,
-    ),
+    child: Image.asset(asset, width: size, height: size, fit: BoxFit.contain),
   );
 }
 
@@ -164,8 +168,8 @@ class _NavIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final asset = item.asset;
     final icon = item.icon;
-    if (asset != null) return _assetIcon(asset);
-    if (icon == null) return const SizedBox.square(dimension: _iconSize);
-    return Icon(icon, color: AppColors.onPrimary, size: _iconSize);
+    if (asset != null) return _assetIcon(asset, item.size);
+    if (icon == null) return SizedBox.square(dimension: item.size);
+    return Icon(icon, color: AppColors.onPrimary, size: item.size);
   }
 }

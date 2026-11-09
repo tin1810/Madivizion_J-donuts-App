@@ -13,6 +13,7 @@ abstract final class AppMotion {
   static const Duration ring = Duration(milliseconds: 900);
   static const Duration countUp = Duration(milliseconds: 1400);
   static const Duration bannerHold = Duration(milliseconds: 4000);
+  static const Duration comingSoon = Duration(milliseconds: 3600);
 
   static const Curve pressCurve = Curves.easeOutCubic;
   static const Curve enterCurve = Curves.easeOutCubic;

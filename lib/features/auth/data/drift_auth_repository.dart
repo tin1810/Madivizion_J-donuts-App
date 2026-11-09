@@ -37,10 +37,20 @@ class DriftAuthRepository implements AuthRepository {
       if (existing != null) {
         throw const AccountAlreadyExistsFailure();
       }
-      await _database
-          .into(_database.storedUsers)
-          .insert(_companion(account));
+      await _database.into(_database.storedUsers).insert(_companion(account));
       return account;
+    });
+  }
+
+  @override
+  Future<Result<UserAccount?>> signedInAccount() {
+    return Result.capture(() async {
+      final session = await _sessionStore.read();
+      if (session case Success<String?>(value: final phone?)) {
+        final row = await _row(phone);
+        return row == null ? null : _account(row);
+      }
+      return null;
     });
   }
 
@@ -58,9 +68,9 @@ class DriftAuthRepository implements AuthRepository {
   Future<void> _wait() => Future<void>.delayed(delay);
 
   Future<StoredUser?> _row(String phoneE164) {
-    return (_database.select(_database.storedUsers)
-          ..where((row) => row.phoneE164.equals(phoneE164)))
-        .getSingleOrNull();
+    return (_database.select(
+      _database.storedUsers,
+    )..where((row) => row.phoneE164.equals(phoneE164))).getSingleOrNull();
   }
 
   StoredUsersCompanion _companion(UserAccount account) {

@@ -529,7 +529,7 @@ abstract class AppLocalizations {
   /// Shop strip heading, using the number of shops in the database
   ///
   /// In en, this message translates to:
-  /// **'There are {count} J\'Donut shops'**
+  /// **'There are {count} J\'Donut shops Near You '**
   String homeShops(int count);
 
   /// Heading above the nearby shop cards
@@ -609,6 +609,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wallet'**
   String get navWallet;
+
+  /// Animated message on Nearby and Wallet until those screens exist
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
 
   /// Title of the Rewards screen
   ///

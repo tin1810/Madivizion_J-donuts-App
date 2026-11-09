@@ -34,11 +34,11 @@ class StoredUsers extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e, {int? schemaVersion}) : _schemaVersion = schemaVersion;
 
-  /// Tests pass `1` to build the pre-catalog file. The app uses version 3.
+  /// Tests pass `1` to build the pre-catalog file. The app uses version 4.
   final int? _schemaVersion;
 
   @override
-  int get schemaVersion => _schemaVersion ?? 3;
+  int get schemaVersion => _schemaVersion ?? 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -57,8 +57,18 @@ class AppDatabase extends _$AppDatabase {
         await migrator.createTable(storedMembers);
         await migrator.createTable(storedTiers);
         await migrator.createTable(storedChallenges);
-      } else if (from < 3 && to >= 3) {
+        return;
+      }
+      if (from < 3 && to >= 3) {
         await migrator.addColumn(storedBanners, storedBanners.badge);
+      }
+      if (from < 4 && to >= 4) {
+        await customStatement(
+          "ALTER TABLE shops ADD COLUMN address TEXT NOT NULL DEFAULT '';",
+        );
+        await customStatement(
+          "ALTER TABLE shops ADD COLUMN phone TEXT NOT NULL DEFAULT '';",
+        );
       }
     },
   );

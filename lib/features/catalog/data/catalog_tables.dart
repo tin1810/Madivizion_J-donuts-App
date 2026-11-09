@@ -57,6 +57,10 @@ class StoredShops extends Table {
 
   TextColumn get name => text()();
 
+  TextColumn get address => text()();
+
+  TextColumn get phone => text()();
+
   TextColumn get imageUrl => text()();
 
   IntColumn get sortOrder => integer()();

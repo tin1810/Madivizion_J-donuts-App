@@ -30,11 +30,16 @@ void main() {
     expect(member.notificationCount, 2);
     final seasonal = (feed.seasonal as Success<List<HomeProduct>>).value;
     expect(seasonal.map((item) => item.name), [
-      'Mistletoe Romance box',
-      'Christmas MI Family box',
+      'Monster Yellow Flake',
+      'Monster White Flake',
+      'Monster Red Flake',
+      'Monster Rainbow Blue Flake',
     ]);
     expect(seasonal.map((item) => item.id), isNot(contains('p_coconut')));
-    expect((feed.shops as Success<List<HomeShop>>).value, hasLength(4));
+    final shops = (feed.shops as Success<List<HomeShop>>).value;
+    expect(shops, hasLength(4));
+    expect(shops.first.name, 'Pinlon');
+    expect(shops.first.phone, '09 880914808');
     final banners = (feed.banners as Success<List<HomeBanner>>).value;
     expect(banners, hasLength(4));
     expect(banners.first.title, 'We are now at Central Boulevard');

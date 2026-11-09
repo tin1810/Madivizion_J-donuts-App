@@ -116,7 +116,13 @@ class DriftCatalogRepository implements CatalogRepository {
       final rows = await query.get();
       return [
         for (final row in rows)
-          HomeShop(id: row.id, name: row.name, imageUrl: row.imageUrl),
+          HomeShop(
+            id: row.id,
+            name: row.name,
+            address: row.address,
+            phone: row.phone,
+            imageUrl: row.imageUrl,
+          ),
       ];
     });
   }
