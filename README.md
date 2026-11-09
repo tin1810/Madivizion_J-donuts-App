@@ -1,6 +1,6 @@
 J'Donuts: Technical Overview & Architectural Documentation
-Executive Summary
-J'Donuts is a production-grade Flutter application developed as a technical evaluation project for Madivizion. Designed with a robust Clean Architecture approach and state-of-the-art offline-first capabilities, the application functions seamlessly in full airplane mode using a bundled SQLite database powered by Drift.
+
+J'Donuts is a production-grade Flutter application developed as a technical evaluation project for Madivizion Code Test. Designed with a robust Clean Architecture approach and state-of-the-art offline-first capabilities, the application functions seamlessly in full airplane mode using a bundled SQLite database powered by Drift.
 
 The application adheres to strict platform standards, featuring rigorous BLoC state management, dependency injection via get_it, declarative routing with go_router, and comprehensive internationalization (English and Myanmar).
 
