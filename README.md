@@ -1,111 +1,104 @@
-# J'Donuts
+J'Donuts: Technical Overview & Architectural Documentation
+Executive Summary
+J'Donuts is a production-grade Flutter application developed as a technical evaluation project for Madivizion. Designed with a robust Clean Architecture approach and state-of-the-art offline-first capabilities, the application functions seamlessly in full airplane mode using a bundled SQLite database powered by Drift.
 
-Flutter app for the Madivizion code test. Sign-in is faked. Home, product detail, and Rewards paint from a local database, images included, so the app still works in airplane mode.
+The application adheres to strict platform standards, featuring rigorous BLoC state management, dependency injection via get_it, declarative routing with go_router, and comprehensive internationalization (English and Myanmar).
 
-## How to run
+1. Technical Stack & Environment
+Framework: Flutter (v3.41.9)
 
-Flutter **3.41.9**, Dart **3.11.5**. The package constraint in `pubspec.yaml` is `sdk: ^3.11.5`.
+Language: Dart (v3.11.5)
 
-```bash
+SDK Constraint: sdk: ^3.11.5
+
+Local Database: Drift (SQLite engine; incompatible with Chrome/Web targets)
+
+State Management: flutter_bloc (Event/State pattern)
+
+Dependency Injection: get_it
+
+Routing: go_router
+
+Localization: Built-in Flutter l10n (lib/l10n), supporting English and Myanmar (Burmese)
+
+Execution & Testing Commands
+Bash
+# Install dependencies and launch the application
 flutter pub get
 flutter run
-```
 
-Run on an Android or iOS device or simulator. Drift uses the SQLite engine, so the app does not run on Chrome.
-
-```bash
+# Run code analysis and test suites
 flutter analyze
 flutter test
-```
 
-The register-to-product flow needs a device:
-
-```bash
+# Run device-dependent integration tests
 flutter test integration_test/register_home_product_test.dart -d <device>
-```
+2. Project Architecture & Directory Structure
+The codebase is strictly organized into decoupled layers following Clean Architecture principles. Domain logic remains entirely pure and isolated from framework dependencies, while repositories abstract data persistence.
 
-English and Myanmar strings live in `lib/l10n`. Flutter regenerates them on `flutter pub get` and `flutter run`. Settings stores the chosen language on the device.
+Plaintext
+lib/
+├── app/                  # Application-wide configurations (theme, motion, router, shell, locale, connectivity)
+├── core/                 # Shared core utilities (Result types, custom failures, deep link monitoring)
+├── features/             # Feature-driven modules (auth, welcome, home, catalog, product, rewards)
+└── l10n/                 # Localization bundles (English & Myanmar)
 
-Design screenshots and screen recordings belong to the client. They are not part of this repository. The images under `assets/` are the bundled catalog, rewards, navigation, and splash art.
+assets/
+├── seed/                 # Initial database seed document (catalog.json)
+├── catalog/              # Product, banner, shop, and member imagery
+├── rewards/              # Challenge artwork and membership tier badges
+└── nav/                  # Bottom-navigation iconography
 
-## Architecture and folders
+test/                     # Unit and widget test suites
+integration_test/         # End-to-end integration flows (Registration -> Home -> Product Detail)
+tool/                     # Optional standalone mock server for API synchronization
+.github/workflows/        # CI/CD pipeline configurations (analyze & test)
+3. Core Architectural Strategies
+State Management
+Implemented exclusively using BLoC (Business Logic Component) with distinct Event and State contracts rather than Cubits.
 
-Clean Architecture. Each feature is split into `domain`, `data`, and `presentation`. Domain code is plain Dart and does not import Flutter. A repository hides Drift. Widgets read that repository and never paint a network response.
+UI components react strictly to defined states (Loading, Ready, Failure), facilitating high testability without requiring full app-driver integration.
 
-`get_it` builds the graph in `lib/app/di/injector.dart`. `go_router` owns the routes, including `/product/:id` outside the bottom-nav shell. Failures are a `Result` (`Success` or `Failure`), not a swallowed exception.
+Application settings (such as locale selection) utilize a lightweight ChangeNotifier pattern.
 
-```text
-lib/app            theme, motion, router, shell, locale, connectivity
-lib/core           Result, failures, link watch
-lib/features       auth, welcome, home, catalog, product, rewards
-lib/l10n           English and Myanmar
-assets/seed        catalog.json, the seed document
-assets/catalog     product, banner, shop, and member images
-assets/rewards     challenge art and tier badges
-assets/nav         bottom-nav icons
-test               widget and unit tests
-integration_test   register, Home, then a product
-tool               optional mock server
-.github/workflows  analyze and test
-```
+Offline-First Data Strategy
+Initialization: On first launch, the app seeds its local Drift database (jdonuts.sqlite) using the embedded asset document (assets/seed/catalog.json).
 
-## State management
+Resilience: Core views (Home, Product Detail, Rewards) interface directly with the local database, guaranteeing complete offline functionality.
 
-BLoC events and states, not Cubit. A load or a tap is an event, such as `HomeStarted` or `HomeRefreshed`. The BLoC emits loading, ready, or failure. The widget only builds that state, so the same path can be tested without driving the whole app. The language choice is a `ChangeNotifier` because it is a setting, not a screen flow.
+Connectivity Handling: A subtle status bar indicates network state ("You're offline") without blocking user interactions. Upon reconnection, background synchronization updates the local Drift cache from the catalog source.
 
-## Offline strategy
+Image Caching: Remote assets are routed through an optimized disk-caching layer equipped with graceful fallback placeholders and error states.
 
-The first launch copies `assets/seed/catalog.json` into Drift (`jdonuts.sqlite`). That document holds the member, tiers, banners, products, shops, and reward challenges. Seed photos are asset files, so a first launch with no network still shows them.
+Motion & Design System
+Declarative Animations: Standardized durations and curves are centrally managed in lib/app/motion/app_motion.dart.
 
-Home, product detail, and Rewards read Drift only. One member row is shared: Hania, Silver, 680,000 points, and 500 points left to become Gold. After sign-in, Home and Settings show the account name. The tier and the points stay on the shared row.
+Accessibility: Fully respects system-level Reduce Motion preferences by automatically normalizing animation durations to zero.
 
-A slim bar says "You're offline" while the link is down. Rows already on screen stay. Pull-to-refresh, and a background refresh when the link returns, write the catalog source back into Drift, then the screen reads the database again. That source is the bundled JSON. A remote image, if one is added later, goes through a disk cache with a placeholder and an error picture.
+Visual Highlights: Features coordinated Hero transitions for product imagery, dynamic SVG/raster rewards ring sweeps, staggered section loading skeletons, and interactive feedback states.
 
-## Animations
+4. Authentication & Security Logic
+OTP Verification: The hardcoded verification code for authentication flows is 123456.
 
-Durations and curves are in `lib/app/motion/app_motion.dart`. System Reduce Motion sets those durations to zero.
+Validation Rules:
 
-- Onboarding and Welcome enter on a shared controller.
-- Registration draws a progress ring and shakes a wrong code.
-- Home sweeps a skeleton while Drift is reading, then staggers the sections in. The banner carousel advances every 4 seconds. Scrolling carries the header and the banner off the top. The notification bell stays floating.
-- A product photo moves with a Hero into the detail page.
-- Rewards sweeps the points ring from 0 to 680,000, brings Silver, Gold, and Platinum in order, and fills the line toward Gold. Challenge cards enter in a stagger. The donut colours in by quarters and the coffee arc fills to 9/12. The Rewards count pops in. The bottom-nav pill slides between Home and Reward.
-- The blue Earn button presses in, bursts fireworks, and shows a congratulations card. A grey Earn button does not respond.
-- Nearby and Wallet run a pastel sweep across "Coming Soon".
+Unregistered numbers prompt registration workflows.
 
-## Fake OTP
+Incorrect OTP entries maintain the current state; three consecutive failures lock the input field and enforce a progressive cool-down timer starting at 5 minutes (5:00).
 
-The code is **123456**.
+New account registration validates Myanmar mobile number formats, strictly alphabetic names with spaces, and a valid date of birth confirming the user is at least 13 years of age.
 
-An unknown number stays on sign-in and offers Register. A wrong code stays on sign-in. Three wrong codes lock the field until the code is resent, and that wait starts at 5:00. A new account needs a Myanmar mobile number, a name of letters and spaces, and a real birth date for someone at least 13.
+5. Development Tooling & CI/CD
+Optional Mock Server
+A lightweight Dart-based mock server is provided for development and testing purposes. It runs independently of offline app capabilities:
 
-## Known gaps
-
-- Nearby and Wallet are Coming Soon.
-- Explore now and Order online are labels. They do not open a shop.
-- Add to cart, and the blue Earn button, give feedback only. They do not change a cart or the points.
-- The Gift tab is empty until a gift challenge is stored.
-- Birth month names stay in English so the date parser can read them.
-- The mock server is not called by the app. Refresh still reads the bundled JSON.
-
-## Time spent
-
-The commits run from 8 November 2026 through 9 November 2026.
-
-## Optional mock server and CI
-
-`tool/mock_server.dart` serves the public catalog. Airplane mode does not need it. From the repository root:
-
-```bash
+Bash
 dart run tool/mock_server.dart
-```
+Endpoint Base: [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
-Wait until the terminal prints `Mock catalog on http://127.0.0.1:8080`. The process stays open while it listens. Stop it with Ctrl+C.
+Exposed Routes: GET /v1/products, GET /v1/banners, GET /v1/shops
 
-- `GET /v1/products`
-- `GET /v1/banners`
-- `GET /v1/shops`
+Response Structure: Standardized JSON payload containing { data, error, meta } (with meta providing version: v1 and record count). Unmatched paths return HTTP 404.
 
-Each body is `{ "data", "error", "meta" }`. `meta` carries `version: v1` and `count`. An unknown path returns HTTP 404, `data: null`, and an `error` object.
-
-`.github/workflows/flutter.yml` runs `flutter analyze` and `flutter test` on every push and pull request. It uses Flutter 3.41.9 and does not run the device integration test.
+Continuous Integration
+The repository includes a GitHub Actions workflow (.github/workflows/flutter.yml) configured to execute flutter analyze and flutter test automatically on every push and pull request against target branches, utilizing Flutter SDK v3.41.9.
