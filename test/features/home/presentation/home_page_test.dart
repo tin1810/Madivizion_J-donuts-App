@@ -42,6 +42,7 @@ void main() {
     expect(find.text('2'), findsOneWidget);
     expect(find.text('Mistletoe Romance box'), findsOneWidget);
     expect(find.text('59% off'), findsOneWidget);
+    expect(find.text('New shop'), findsOneWidget);
     expect(find.text('Nothing here yet'), findsOneWidget);
     expect(find.text("Couldn't load this section"), findsOneWidget);
     expect(find.text('There are 4 J\'Donut shops'), findsOneWidget);
@@ -150,6 +151,7 @@ HomeFeed _feed() {
         id: 'banner_central',
         title: 'We are now at Central Boulevard',
         imageUrl: 'assets/catalog/banner_central.png',
+        badge: 'New shop',
       ),
     ]),
     shops: Success([

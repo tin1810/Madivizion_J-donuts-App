@@ -113,9 +113,49 @@ class _Slide extends StatelessWidget {
         padding: const EdgeInsets.only(right: AppSpacing.md),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(AppRadius.md)),
-          child: CatalogImage(url: banner.imageUrl),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CatalogImage(url: banner.imageUrl),
+              if (banner.badge case final label? when label.isNotEmpty)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: _PromoBadge(label: label),
+                ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _PromoBadge extends StatelessWidget {
+  const _PromoBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xxs,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.badge,
+        borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
+      ),
+      child: Text(label, style: _style(context)),
+    );
+  }
+
+  TextStyle? _style(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.onPrimary,
+      fontSize: AppTextSize.caption,
+      fontWeight: FontWeight.w700,
     );
   }
 }
