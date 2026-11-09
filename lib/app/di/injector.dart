@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madivizion_jdonuts_app/app/connectivity/bloc_link_read.dart';
 import 'package:madivizion_jdonuts_app/app/connectivity/link_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/di/app_bloc_observer.dart';
+import 'package:madivizion_jdonuts_app/app/locale/app_locale.dart';
 import 'package:madivizion_jdonuts_app/app/router/app_router.dart';
 import 'package:madivizion_jdonuts_app/app/router/session_listenable.dart';
 import 'package:madivizion_jdonuts_app/core/network/link_phase.dart';
@@ -50,8 +52,18 @@ Future<void> configureDependencies({
   SecondTicker? ticker,
   LinkWatch? linkWatch,
   CatalogRepository? catalog,
+  Locale? initialLocale,
+  Future<void> Function(String code)? saveLocale,
 }) async {
-  injector.registerLazySingleton<BlocObserver>(AppBlocObserver.new);
+  injector
+    ..registerLazySingleton<BlocObserver>(AppBlocObserver.new)
+    ..registerSingleton<AppLocale>(
+      AppLocale(
+        initial: initialLocale ?? AppLocale.english,
+        onSave: saveLocale,
+      ),
+      dispose: (value) => value.dispose(),
+    );
   final repository = authRepository ?? await _openAuthRepository();
   _registerAuth(repository, pacing: pacing, ticker: ticker);
   _registerSession();

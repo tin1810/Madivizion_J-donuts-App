@@ -5,17 +5,31 @@ import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/features/rewards/domain/rewards_board.dart';
 
 /// The coco donut photo, or the americano cup framed by its progress arc.
+///
+/// [reveal] runs from 0 to 1 so the donut colours in and the coffee arc fills.
 class ChallengeArt extends StatelessWidget {
-  const ChallengeArt({required this.challenge, super.key});
+  const ChallengeArt({required this.challenge, this.reveal, super.key});
 
   final RewardChallenge challenge;
+  final Animation<double>? reveal;
 
   @override
   Widget build(BuildContext context) {
-    if (challenge.artwork == RewardArtwork.coffee) {
-      return _Americano(fraction: challenge.fraction);
+    final motion = reveal;
+    if (motion == null) {
+      return _art(challenge.fraction);
     }
-    return _CocoDonut(fraction: challenge.fraction);
+    return AnimatedBuilder(
+      animation: motion,
+      builder: (context, _) => _art(challenge.fraction * motion.value),
+    );
+  }
+
+  Widget _art(double fraction) {
+    if (challenge.artwork == RewardArtwork.coffee) {
+      return _Americano(fraction: fraction);
+    }
+    return _CocoDonut(fraction: fraction);
   }
 }
 

@@ -154,7 +154,7 @@ class _Count extends StatelessWidget {
   }
 }
 
-/// Earn and Gift. The selected pill slides its color.
+/// Earn and Gift as two separate pills. The selected one fills cyan.
 class RewardsTabs extends StatelessWidget {
   const RewardsTabs({
     required this.selected,
@@ -168,19 +168,20 @@ class RewardsTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final earn = selected == RewardTabs.earn;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _Tab(
           label: l10n.rewardsEarnTab,
-          selected: selected == RewardTabs.earn,
+          selected: earn,
           onTap: () => onSelected(RewardTabs.earn),
           tabKey: const Key('rewards-earn-tab'),
         ),
         const SizedBox(width: AppSpacing.sm),
         _Tab(
           label: l10n.rewardsGiftTab,
-          selected: selected == RewardTabs.gift,
+          selected: !earn,
           onTap: () => onSelected(RewardTabs.gift),
           tabKey: const Key('rewards-gift-tab'),
         ),
@@ -217,10 +218,10 @@ class _Tab extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? AppColors.primary : Colors.grey.shade300,
           borderRadius: const BorderRadius.all(Radius.circular(AppRadius.pill)),
-          border: Border.all(color: Colors.white, width: AppSize.borderWidth),
-          // border: selected
-          //     ? Bor
-          //     :
+          border: Border.all(
+            color: selected ? AppColors.primary : AppColors.surface,
+            width: AppSize.borderWidth,
+          ),
         ),
         child: Text(label, style: _style(context)),
       ),

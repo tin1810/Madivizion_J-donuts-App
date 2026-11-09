@@ -12,6 +12,11 @@ class MemoryAuthRepository implements AuthRepository {
   final Map<String, UserAccount> _users = {};
   String? _session;
 
+  /// Stores [account] without the fake delay, so a widget test can seed it.
+  void store(UserAccount account) {
+    _users[account.phoneE164] = account;
+  }
+
   @override
   Future<Result<UserAccount?>> findByPhone(String phoneE164) async {
     await Future<void>.delayed(delay);

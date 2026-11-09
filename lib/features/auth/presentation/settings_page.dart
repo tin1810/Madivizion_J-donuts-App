@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madivizion_jdonuts_app/app/di/injector.dart';
+import 'package:madivizion_jdonuts_app/app/locale/app_locale.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/core/result/result.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/auth_repository.dart';
 import 'package:madivizion_jdonuts_app/features/auth/domain/user_account.dart';
+import 'package:madivizion_jdonuts_app/features/auth/presentation/language_sheet.dart';
 import 'package:madivizion_jdonuts_app/features/auth/presentation/session_bloc.dart';
 import 'package:madivizion_jdonuts_app/features/catalog/presentation/catalog_image.dart';
 import 'package:madivizion_jdonuts_app/features/home/domain/catalog_repository.dart';
@@ -57,19 +59,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: AppColors.canvas,
       body: Column(
-   
         children: [
-          SizedBox(height: AppSpacing.sm,),
           _NameBlock(name: _name, phone: _phone, tier: _tier, photo: _photo),
-        
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: FilledButton(
-              onPressed: () {
-                context.read<SessionBloc>().add(const SessionLoggedOut());
-              },
-              child: Text(l10n.logOut),
-            ),
+          _LanguageRow(languages: injector<AppLocale>()),
+
+          _LogOutRow(
+            label: l10n.logOut,
+            onPressed: () {
+              context.read<SessionBloc>().add(const SessionLoggedOut());
+            },
           ),
         ],
       ),
@@ -93,24 +91,20 @@ class _NameBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.headerWash,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(AppRadius.lg),
-          bottomRight: Radius.circular(AppRadius.lg),
-        ),
-      ),
+    return Container(
+      height: AppSpacing.xxl * 4,
+      decoration: const BoxDecoration(color: AppColors.primaryDisabled),
       child: SafeArea(
         bottom: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.md,
-            AppSpacing.sm,
+            AppSpacing.xxl,
             AppSpacing.md,
             AppSpacing.md,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Photo(url: photo),
               const SizedBox(width: AppSpacing.sm),
@@ -165,6 +159,121 @@ class _Photo extends StatelessWidget {
             ? const ColoredBox(color: AppColors.surface)
             : CatalogImage(url: url),
       ),
+    );
+  }
+}
+
+class _LanguageRow extends StatelessWidget {
+  const _LanguageRow({required this.languages});
+
+  final AppLocale languages;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return ListenableBuilder(
+      listenable: languages,
+      builder: (context, _) {
+        final value = languages.isMyanmar
+            ? l10n.settingsLanguageMyanmarValue
+            : l10n.settingsLanguageEnglishValue;
+        return _SettingLine(
+          onTap: () => showLanguageSheet(context, languages),
+          icon: const Icon(
+            Icons.translate,
+            color: AppColors.textSecondary,
+            size: _SettingLine.glyph,
+          ),
+          label: l10n.settingsLanguage,
+          detail: value,
+        );
+      },
+    );
+  }
+}
+
+class _LogOutRow extends StatelessWidget {
+  const _LogOutRow({required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SettingLine(
+      onTap: onPressed,
+      icon: const DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+        child: SizedBox.square(
+          dimension: _SettingLine.slot,
+          child: Icon(
+            Icons.logout,
+            color: AppColors.onPrimary,
+            size: _SettingLine.glyph,
+          ),
+        ),
+      ),
+      label: label,
+    );
+  }
+}
+
+/// One settings row. The icon slot is the same width on every row.
+class _SettingLine extends StatelessWidget {
+  const _SettingLine({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.detail,
+  });
+
+  final Widget icon;
+  final String label;
+  final VoidCallback onTap;
+  final String? detail;
+
+  static const double slot = 40;
+  static const double glyph = 22;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: slot,
+              height: slot,
+              child: Align(alignment: Alignment.centerLeft, child: icon),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(child: Text(label, style: _label(context))),
+            if (detail != null) Text(detail!, style: _detail(context)),
+            const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextStyle? _label(BuildContext context) {
+    return Theme.of(
+      context,
+    ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700);
+  }
+
+  TextStyle? _detail(BuildContext context) {
+    return Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: AppColors.textSecondary,
+      fontWeight: FontWeight.w600,
     );
   }
 }

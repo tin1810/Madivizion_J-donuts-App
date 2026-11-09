@@ -167,7 +167,16 @@ class _BoardState extends State<_Board> with SingleTickerProviderStateMixin {
           const SizedBox(height: AppSpacing.md),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            child: _cards(context, cards),
+            child: AnimatedSwitcher(
+              duration: AppMotion.resolve(context, AppMotion.fast),
+              switchInCurve: AppMotion.enterCurve,
+              switchOutCurve: AppMotion.exitCurve,
+              transitionBuilder: _slide,
+              child: KeyedSubtree(
+                key: ValueKey(_tab),
+                child: _cards(context, cards),
+              ),
+            ),
           ),
         ],
       ),
@@ -185,11 +194,22 @@ class _BoardState extends State<_Board> with SingleTickerProviderStateMixin {
             animation: _motion,
             start: 0.12 + index * 0.08,
             end: 0.42 + index * 0.08,
-            child: ChallengeCard(challenge: cards[index]),
+            child: ChallengeCard(challenge: cards[index], reveal: _motion),
           ),
       ],
     );
   }
+}
+
+Widget _slide(Widget child, Animation<double> animation) {
+  final offset = Tween<Offset>(
+    begin: const Offset(0.06, 0),
+    end: Offset.zero,
+  ).animate(animation);
+  return FadeTransition(
+    opacity: animation,
+    child: SlideTransition(position: offset, child: child),
+  );
 }
 
 const double _tabHang = 22;
@@ -234,7 +254,13 @@ class _Summary extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: TierLadder(tiers: board.tiers)),
+        Expanded(
+          child: TierLadder(
+            tiers: board.tiers,
+            currentTierId: board.currentTierId,
+            reveal: reveal,
+          ),
+        ),
         Transform.translate(
           offset: const Offset(AppSpacing.xl + 8, 0),
           child: PointsRing(points: board.points, reveal: reveal),

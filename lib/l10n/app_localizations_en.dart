@@ -304,6 +304,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rewardsEarn => 'EARN';
 
   @override
+  String get rewardsCongratulations => 'Congratulations!';
+
+  @override
   String rewardsPoints(int points) {
     return '$points pts';
   }
@@ -316,6 +319,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log out';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageEnglish => 'English';
+
+  @override
+  String get settingsLanguageMyanmar => 'Myanmar';
+
+  @override
+  String get settingsLanguageEnglishValue => 'ENGLISH';
+
+  @override
+  String get settingsLanguageMyanmarValue => 'MYANMAR';
 
   @override
   String get productNew => 'New';

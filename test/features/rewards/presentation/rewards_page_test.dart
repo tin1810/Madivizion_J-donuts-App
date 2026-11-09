@@ -15,13 +15,13 @@ import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 void main() {
   testWidgets(
     'the points count up and the finished challenge highlights earn',
-    (tester  ) async {
-    await tester.binding.setSurfaceSize(const Size(800, 1600));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    await tester.pumpWidget(_app(MemoryRewardsRepository()));
-    await tester.pump();
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(_app(MemoryRewardsRepository()));
+      await tester.pump();
 
-    expect(find.text('680,000'), findsNothing);
+      expect(find.text('680,000'), findsNothing);
       expect(find.text("You're here now"), findsOneWidget);
       expect(find.text('500 pts Remaining to become Gold'), findsOneWidget);
       expect(find.text("You'll be here soon"), findsOneWidget);
@@ -55,9 +55,44 @@ void main() {
     expect(find.text('9/12'), findsOneWidget);
     await tester.tap(find.byKey(const Key('rewards-gift-tab')));
     await tester.pump();
+    await tester.pump(AppMotion.fast + const Duration(milliseconds: 50));
 
     expect(find.text('Nothing here yet'), findsOneWidget);
     expect(find.text('9/12'), findsNothing);
+  });
+
+  testWidgets('tapping earn bursts fireworks and stays on the board', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(_app(MemoryRewardsRepository()));
+    await tester.pump();
+    await tester.pump(AppMotion.countUp);
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(find.text('680,000'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('rewards-earn-ready')));
+    await tester.pump();
+    expect(find.text('Congratulations!'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1700));
+
+    expect(find.text('Congratulations!'), findsNothing);
+    expect(find.text('680,000'), findsOneWidget);
+    expect(find.byKey(const Key('rewards-earn-ready')), findsOneWidget);
+  });
+
+  testWidgets('a grey earn button does not celebrate', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(_app(MemoryRewardsRepository()));
+    await tester.pump();
+
+    await tester.tap(find.text('EARN').at(1), warnIfMissed: false);
+    await tester.pump();
+
+    expect(find.text('Congratulations!'), findsNothing);
+    expect(find.byKey(const Key('rewards-earn-ready')), findsOneWidget);
   });
 
   testWidgets('a failed read can be tried again', (tester) async {

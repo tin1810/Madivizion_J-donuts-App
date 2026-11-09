@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:madivizion_jdonuts_app/app/motion/app_motion.dart';
+import 'package:madivizion_jdonuts_app/app/motion/press_scale.dart';
 import 'package:madivizion_jdonuts_app/app/theme/app_theme.dart';
 import 'package:madivizion_jdonuts_app/features/rewards/domain/rewards_board.dart';
 import 'package:madivizion_jdonuts_app/features/rewards/presentation/challenge_art.dart';
+import 'package:madivizion_jdonuts_app/features/rewards/presentation/earn_fireworks.dart';
 import 'package:madivizion_jdonuts_app/l10n/app_localizations.dart';
 
 class ChallengeCard extends StatelessWidget {
-  const ChallengeCard({required this.challenge, super.key});
+  const ChallengeCard({required this.challenge, this.reveal, super.key});
 
   final RewardChallenge challenge;
+  final Animation<double>? reveal;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class ChallengeCard extends StatelessWidget {
             children: [
               SizedBox.square(
                 dimension: 112,
-                child: ChallengeArt(challenge: challenge),
+                child: ChallengeArt(challenge: challenge, reveal: reveal),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
@@ -108,7 +111,7 @@ class _EarnButtonState extends State<_EarnButton>
     super.initState();
     _motion = AnimationController(vsync: this);
     _curve = CurvedAnimation(parent: _motion, curve: AppMotion.badgeCurve);
-    _scale = Tween<double>(begin: 0.92, end: 1).animate(_curve);
+    _scale = Tween<double>(begin: 0.72, end: 1).animate(_curve);
   }
 
   @override
@@ -135,21 +138,28 @@ class _EarnButtonState extends State<_EarnButton>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final face = DecoratedBox(
+      key: widget.ready ? const Key('rewards-earn-ready') : null,
+      decoration: BoxDecoration(
+        color: widget.ready ? AppColors.primary : AppColors.ringTrack,
+        borderRadius: const BorderRadius.all(Radius.circular(AppRadius.pill)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        child: Text(l10n.rewardsEarn, style: _label(context)),
+      ),
+    );
+    if (!widget.ready) {
+      return IgnorePointer(child: face);
+    }
     return ScaleTransition(
-      scale: widget.ready ? _scale : const AlwaysStoppedAnimation<double>(1),
-      child: DecoratedBox(
-        key: widget.ready ? const Key('rewards-earn-ready') : null,
-        decoration: BoxDecoration(
-          color: widget.ready ? AppColors.primary : AppColors.ringTrack,
-          borderRadius: const BorderRadius.all(Radius.circular(AppRadius.pill)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.xs,
-          ),
-          child: Text(l10n.rewardsEarn, style: _label(context)),
-        ),
+      scale: _scale,
+      child: PressScale(
+        onPressed: () => EarnFireworks.show(context),
+        child: face,
       ),
     );
   }

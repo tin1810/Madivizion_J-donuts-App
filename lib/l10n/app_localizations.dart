@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_my.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +93,10 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('my'),
+  ];
 
   /// Name of the application
   ///
@@ -652,6 +656,12 @@ abstract class AppLocalizations {
   /// **'EARN'**
   String get rewardsEarn;
 
+  /// Celebration shown when a finished challenge's Earn button is tapped
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get rewardsCongratulations;
+
   /// Points awarded by a challenge
   ///
   /// In en, this message translates to:
@@ -675,6 +685,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log out'**
   String get logOut;
+
+  /// Settings row that opens the language sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// English option in the language sheet
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingsLanguageEnglish;
+
+  /// Myanmar option in the language sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Myanmar'**
+  String get settingsLanguageMyanmar;
+
+  /// Value shown beside Language when English is selected
+  ///
+  /// In en, this message translates to:
+  /// **'ENGLISH'**
+  String get settingsLanguageEnglishValue;
+
+  /// Value shown beside Language when Myanmar is selected
+  ///
+  /// In en, this message translates to:
+  /// **'MYANMAR'**
+  String get settingsLanguageMyanmarValue;
 
   /// Badge on a product marked new
   ///
@@ -730,7 +770,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['en', 'my'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -741,6 +781,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'my':
+      return AppLocalizationsMy();
   }
 
   throw FlutterError(

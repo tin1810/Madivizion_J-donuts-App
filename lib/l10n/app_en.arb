@@ -367,6 +367,10 @@
   "@rewardsEarn": {
     "description": "Button on a challenge card"
   },
+  "rewardsCongratulations": "Congratulations!",
+  "@rewardsCongratulations": {
+    "description": "Celebration shown when a finished challenge's Earn button is tapped"
+  },
   "rewardsPoints": "{points} pts",
   "@rewardsPoints": {
     "description": "Points awarded by a challenge",
@@ -385,6 +389,26 @@
   "logOut": "Log out",
   "@logOut": {
     "description": "Action that clears the saved session"
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Settings row that opens the language sheet"
+  },
+  "settingsLanguageEnglish": "English",
+  "@settingsLanguageEnglish": {
+    "description": "English option in the language sheet"
+  },
+  "settingsLanguageMyanmar": "Myanmar",
+  "@settingsLanguageMyanmar": {
+    "description": "Myanmar option in the language sheet"
+  },
+  "settingsLanguageEnglishValue": "ENGLISH",
+  "@settingsLanguageEnglishValue": {
+    "description": "Value shown beside Language when English is selected"
+  },
+  "settingsLanguageMyanmarValue": "MYANMAR",
+  "@settingsLanguageMyanmarValue": {
+    "description": "Value shown beside Language when Myanmar is selected"
   },
   "productNew": "New",
   "@productNew": {
